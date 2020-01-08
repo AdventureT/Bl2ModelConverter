@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bl2ModelConverter.cpp" />
+    <ClCompile Include="FbxHelper.cpp" />
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="trb2.cpp" />
   </ItemGroup>
@@ -147,7 +148,9 @@
     <ClInclude Include="Bl2ModelConverter.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="FbxHelper.h" />
     <ClInclude Include="Reader.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="trb2.h" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\TrbModelConverter\TrbModelConverter\umHalf.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Bl2ModelConverter.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

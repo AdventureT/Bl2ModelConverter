@@ -73,7 +73,7 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			std::vector<float> vertices;
 			std::vector<float> normals;
 			std::vector<float> uvs;
-			std::vector<unsigned short> faces;
+			std::vector<unsigned long> faces;
 			std::string tag = ReadString(f, 4);
 			long zero = ReadLong(f);
 			short relocationDataCount = ReadShort(f); //?? Unsure
@@ -105,12 +105,16 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			long normalUVStart = 0;
 			long normalUVEnd = 0;
 			std::vector<long> normalUVSize;
+			std::vector<long> verticesCount;
+			std::vector<long> facesCount;
 			for (int a = 0; a < SubInfoCount; a++)
 			{
 				fseek(f, subInfoStarts[a] + dataInfos[1].dataOffset, SEEK_SET);
 				SubInfoData subInfoData = { ReadLong(f), ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),
 					ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),
 					ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f) };
+				verticesCount.push_back(subInfoData.vertexCount);
+				facesCount.push_back(subInfoData.faceCount);
 				subInfoDatas.push_back(subInfoData);
 			}
 			if (SubInfoCount > 1)
@@ -197,80 +201,10 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 						faces.push_back(faceC);
 					}
 				}
-				FbxManager* lSdkManager = FbxManager::Create();
-				FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
-				FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-				lSdkManager->SetIOSettings(ios);
-				int sumVertices = 0;
-				int Viord = 0;
-				int index = 0;
-				int rememberI = 0;
-				int remeberU = 0;
-				int Niord = 0;
-				for (int z = 0; z < SubInfoCount; z++)
-				{
-					FbxNode* lMeshNode = FbxNode::Create(lScene, "test");
-					FbxMesh* lMesh = FbxMesh::Create(lScene, "test");
-					lMeshNode->SetNodeAttribute(lMesh);
-					FbxNode* lRootNode = lScene->GetRootNode();
-					FbxNode* lPatchNode = lScene->GetRootNode();
-					lRootNode->AddChild(lMeshNode);
-					lMesh->InitControlPoints(subInfoDatas[z].vertexCount);
-					FbxVector4* lControlPoints = lMesh->GetControlPoints();
-					FbxLayer* lLayer = lMesh->GetLayer(0);
-					if (lLayer == NULL) {
-						lMesh->CreateLayer();
-						lLayer = lMesh->GetLayer(0);
-					}
-
-					FbxLayerElementNormal* lLayerElementNormal = FbxLayerElementNormal::Create(lMesh, "");
-					FbxLayerElementUV* lLayerElementUV = FbxLayerElementUV::Create(lMesh, "");
-					// Set its mapping mode to map each normal vector to each control point.
-					lLayerElementNormal->SetMappingMode(FbxLayerElement::eByControlPoint);
-					lLayerElementUV->SetMappingMode(FbxLayerElement::eByControlPoint);
-					// Set the reference mode of so that the n'th element of the normal array maps to the n'th
-					// element of the control point array.
-					lLayerElementNormal->SetReferenceMode(FbxLayerElement::eDirect);
-					lLayerElementUV->SetReferenceMode(FbxLayerElement::eDirect);
-					for (int j = 0; j < subInfoDatas[z].vertexCount; j++)
-					{
-						FbxVector4 vertex(vertices[Viord], vertices[Viord + 1], vertices[Viord + 2], vertices[Viord + 3]);
-						FbxVector4 normal(normals[Niord], normals[Niord + 1], normals[Niord + 2]);
-						FbxVector2 uv(uvs[remeberU], uvs[remeberU + 1]);
-						lLayerElementNormal->GetDirectArray().Add(normal);
-						lLayerElementUV->GetDirectArray().Add(uv);
-						lControlPoints[j] = vertex;
-						Viord += 4;
-						Niord += 3;
-						remeberU += 2;
-
-					}
-					for (int y = 0; y < subInfoDatas[z].faceCount / 3; y++)
-					{
-						lMesh->BeginPolygon();
-						lMesh->AddPolygon(faces[rememberI]);
-						lMesh->AddPolygon(faces[rememberI + 1]);
-						lMesh->AddPolygon(faces[rememberI + 2]);
-						lMesh->EndPolygon();
-						rememberI += 3;
-
-					}
-					lLayer->SetNormals(lLayerElementNormal);
-					lLayer->SetUVs(lLayerElementUV);
-					lMeshNode->LclRotation.Set(FbxVector4(180, 0, 0.0)); //Right rotation
-
-				}
-				FbxExporter* lExporter = FbxExporter::Create(lSdkManager, "");
-				lSdkManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
-				std::string currentFileName = fns[i] + ".fbx";
-				bool lExportStatus = lExporter->Initialize(currentFileName.c_str(), -1, lSdkManager->GetIOSettings());
-				if (!lExportStatus) {
-					throw gcnew System::Exception(gcnew System::String("Call to FbxExporter::Initialize() failed."));
-				}
-				lExporter->Export(lScene);
-				lExporter->Destroy();
+				FbxHelper::Model m = { vertices,faces,normals,uvs,verticesCount,facesCount,SubInfoCount, "test" };
+				FbxHelper fbxH;
+				fbxH.CreateFbx(m,fns[i]);
 			}
-
 			subInfoStarts.clear();
 			subInfoDatas.clear();
 			normalUVSize.clear();
@@ -325,9 +259,14 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			fseek(f, havokFileInfoOffset + dataInfos[1].dataOffset, SEEK_SET);
 
 			vector<SubCollsionInfo> subcols;
+			std::vector<long> verticesCount;
+			std::vector<long> facesCount;
 			for (int i = 0; i < collosionModelInfoCount; i++)
 			{
 				subcols.push_back({ ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f) });
+				verticesCount.push_back(subcols[i].vertCount / 3);
+				facesCount.push_back(subcols[i].faceCount);
+				
 			}
 
 			std::vector<float> vertices;
@@ -348,53 +287,10 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 				}
 			}
 
-			FbxManager* lSdkManager = FbxManager::Create();
-			FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
-			FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-			lSdkManager->SetIOSettings(ios);
-			FbxNode* lMeshNode = FbxNode::Create(lScene, "test");
-			FbxMesh* lMesh = FbxMesh::Create(lScene, "test");
-			lMeshNode->SetNodeAttribute(lMesh);
-			FbxNode* lRootNode = lScene->GetRootNode();
-			FbxNode* lPatchNode = lScene->GetRootNode();
-			lRootNode->AddChild(lMeshNode);
-			lMesh->InitControlPoints(subcols[i].vertCount);
-			FbxVector4* lControlPoints = lMesh->GetControlPoints();
-			FbxLayer* lLayer = lMesh->GetLayer(0);
-			int Viord = 0;
-			int rememberI = 0;
-			if (lLayer == NULL) {
-				lMesh->CreateLayer();
-				lLayer = lMesh->GetLayer(0);
-			}
-
-			for (int j = 0; j < subcols[i].vertCount / 3; j++)
-			{
-				FbxVector4 vertex(vertices[Viord], vertices[Viord + 1], vertices[Viord + 2]);
-				lControlPoints[j] = vertex;
-				Viord += 3;
-			}
-			for (int y = 0; y < subcols[i].faceCount / 3; y++)
-			{
-				lMesh->BeginPolygon();
-				lMesh->AddPolygon(faces[rememberI]);
-				lMesh->AddPolygon(faces[rememberI + 1]);
-				lMesh->AddPolygon(faces[rememberI + 2]);
-				lMesh->EndPolygon();
-				rememberI += 3;
-			}
-			lMeshNode->LclRotation.Set(FbxVector4(180, 0, 0.0)); //Right rotation
-
-			FbxExporter* lExporter = FbxExporter::Create(lSdkManager, "");
-			lSdkManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
-			std::string currentFileName = fns[i] + ".fbx";
-			bool lExportStatus = lExporter->Initialize(currentFileName.c_str(), -1, lSdkManager->GetIOSettings());
-			if (!lExportStatus) {
-				throw gcnew System::Exception(gcnew System::String("Call to FbxExporter::Initialize() failed."));
-			}
-			lExporter->Export(lScene);
-			lExporter->Destroy();
-
+			FbxHelper::Model m = { vertices,faces,std::vector<float>(),std::vector<float>(),verticesCount,facesCount,collosionModelInfoCount, "test" };
+			FbxHelper fbxH;
+			fbxH.CreateFbx(m, fns[i]);
+			
 			FILE* fhavok;
 			std::string currentHavokFileName = fns[i] + ".hkx"; //extension not sure
 			if (fopen_s(&fhavok, currentHavokFileName.c_str(), "wb") != 0) // Security check
@@ -409,7 +305,7 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 				fwrite(&havokFile[i], 1, 1, fhavok);
 			}
 			fclose(fhavok);
-
+			
 		}
 	}
 	

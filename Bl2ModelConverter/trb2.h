@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <fbxsdk.h>
 #include <tchar.h>
+#include "FbxHelper.h"
 
 namespace Trb2
 {
