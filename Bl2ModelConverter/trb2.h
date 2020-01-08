@@ -39,8 +39,8 @@ namespace Trb2
 			long dataInfoSize;
 			long tagCount;
 			long tagSize; //Unknown
-			long unknownOffset;
-			long unknownSize;
+			long relocationDataOffset;
+			long relocationDataSize;
 		};
 
 		struct DataInfo
@@ -90,6 +90,18 @@ namespace Trb2
 			short unknown3;
 			short unknown4;
 			long unknown5; //offset?
+		};
+
+		struct SubCollsionInfo
+		{
+			long vertOffset;
+			long faceOffset;
+			long faceEndOffset;
+			long unknownOffset; //Offset to 3 floats with last one 0.75 might be thighness or smth?
+			long vertCount;
+			long faceCount;
+			long unknown;
+			long unknown2;
 		};
 
 		std::vector<TagInfo> tagInfos;

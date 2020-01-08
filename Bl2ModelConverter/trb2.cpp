@@ -23,8 +23,8 @@ void Trb2::trb2::readHeader()
 	header.dataInfoSize = ReadLong(f);
 	header.tagCount = ReadLong(f);
 	header.tagSize = ReadLong(f); //Unknown
-	header.unknownOffset = ReadLong(f); //SYMB Stride: 12 Count: header.unknownSize / 12?
-	header.unknownSize = ReadLong(f);
+	header.relocationDataOffset = ReadLong(f); //SYMB Stride: 12 Count: header.unknownSize / 12?
+	header.relocationDataSize = ReadLong(f);
 	fseek(f, 92, SEEK_CUR);
 	for (int i = 0; i < header.dataInfoCount; i++)
 	{
@@ -42,8 +42,8 @@ void Trb2::trb2::readHeader()
 	{
 		text.push_back(ReadString(f));
 	}
-	fseek(f, header.unknownOffset, SEEK_SET);
-	for (int i = 0; i < header.unknownSize / 12; i++)
+	fseek(f, header.relocationDataOffset, SEEK_SET);
+	for (int i = 0; i < header.relocationDataSize / 12; i++)
 	{
 		SYMBInfo symbInfo = { ReadShort(f), ReadShort(f), ReadShort(f),ReadShort(f), ReadLong(f) };
 		symbInfos.push_back(symbInfo);
@@ -76,8 +76,8 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			std::vector<unsigned short> faces;
 			std::string tag = ReadString(f, 4);
 			long zero = ReadLong(f);
-			short elefen = ReadShort(f);
-			short ninetysix = ReadShort(f);
+			short relocationDataCount = ReadShort(f); //?? Unsure
+			short pmdlSize = ReadShort(f);
 			zero = ReadLong(f);
 			long modelTextOffset = ReadLong(f);
 			fseek(f, 36, SEEK_CUR);
@@ -277,7 +277,11 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 		}
 		else if (tagInfos[indices[i]].tag == "PTEX")
 		{
-			fseek(f, 100, SEEK_CUR);
+			int tell = ftell(f);
+			fseek(f, 88, SEEK_CUR);
+			long width = ReadLong(f);
+			long height = ReadLong(f);
+			long unknown = ReadLong(f);
 			long ddsOffset = ReadLong(f);
 			long ddsSize = ReadLong(f);
 			fseek(f, dataInfos[dataInfos.size() - 1].dataOffset + ddsOffset, SEEK_SET);
@@ -304,13 +308,92 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			}
 			fclose(fTex);
 		}
-		else if (tagInfos[indices[i]].tag == "PCOL") //Havok stuff
+		else if (tagInfos[indices[i]].tag == "PCOL") //Collosion (Havok file + Model Data)
 		{
-			fseek(f, 32, SEEK_CUR);
-			long unknownCount = ReadLong(f);
+			std::string label = ReadString(f, 4);
+			long zero = ReadLong(f);
+			short relocationDataCount = ReadShort(f); //?? Unsure
+			short pcolSize = ReadShort(f);
+			zero = ReadLong(f);
+			long collosionTextOffset = ReadLong(f);
+			fseek(f, 12, SEEK_CUR);
+			long collosionModelInfoCount = ReadLong(f);
 			long havokFileInfoOffset = ReadLong(f);
 			long havokFileOffset = ReadLong(f);
 			long havokFileSize = ReadLong(f);
+
+			fseek(f, havokFileInfoOffset + dataInfos[1].dataOffset, SEEK_SET);
+
+			vector<SubCollsionInfo> subcols;
+			for (int i = 0; i < collosionModelInfoCount; i++)
+			{
+				subcols.push_back({ ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f) });
+			}
+
+			std::vector<float> vertices;
+			std::vector<unsigned long> faces;
+
+			for (int i = 0; i < collosionModelInfoCount; i++)
+			{
+				fseek(f, subcols[i].vertOffset + dataInfos[1].dataOffset, SEEK_SET);
+				for (int j = 0; j < subcols[i].vertCount; j++)
+				{
+					vertices.push_back(ReadFloat(f));
+				}
+
+				fseek(f, subcols[i].faceOffset + dataInfos[1].dataOffset, SEEK_SET);
+				for (int j = 0; j < subcols[i].faceCount; j++)
+				{
+					faces.push_back(ReadULong(f));
+				}
+			}
+
+			FbxManager* lSdkManager = FbxManager::Create();
+			FbxScene* lScene = FbxScene::Create(lSdkManager, "myScene");
+			FbxIOSettings* ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
+			lSdkManager->SetIOSettings(ios);
+			FbxNode* lMeshNode = FbxNode::Create(lScene, "test");
+			FbxMesh* lMesh = FbxMesh::Create(lScene, "test");
+			lMeshNode->SetNodeAttribute(lMesh);
+			FbxNode* lRootNode = lScene->GetRootNode();
+			FbxNode* lPatchNode = lScene->GetRootNode();
+			lRootNode->AddChild(lMeshNode);
+			lMesh->InitControlPoints(subcols[i].vertCount);
+			FbxVector4* lControlPoints = lMesh->GetControlPoints();
+			FbxLayer* lLayer = lMesh->GetLayer(0);
+			int Viord = 0;
+			int rememberI = 0;
+			if (lLayer == NULL) {
+				lMesh->CreateLayer();
+				lLayer = lMesh->GetLayer(0);
+			}
+
+			for (int j = 0; j < subcols[i].vertCount / 3; j++)
+			{
+				FbxVector4 vertex(vertices[Viord], vertices[Viord + 1], vertices[Viord + 2]);
+				lControlPoints[j] = vertex;
+				Viord += 3;
+			}
+			for (int y = 0; y < subcols[i].faceCount / 3; y++)
+			{
+				lMesh->BeginPolygon();
+				lMesh->AddPolygon(faces[rememberI]);
+				lMesh->AddPolygon(faces[rememberI + 1]);
+				lMesh->AddPolygon(faces[rememberI + 2]);
+				lMesh->EndPolygon();
+				rememberI += 3;
+			}
+			lMeshNode->LclRotation.Set(FbxVector4(180, 0, 0.0)); //Right rotation
+
+			FbxExporter* lExporter = FbxExporter::Create(lSdkManager, "");
+			lSdkManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
+			std::string currentFileName = fns[i] + ".fbx";
+			bool lExportStatus = lExporter->Initialize(currentFileName.c_str(), -1, lSdkManager->GetIOSettings());
+			if (!lExportStatus) {
+				throw gcnew System::Exception(gcnew System::String("Call to FbxExporter::Initialize() failed."));
+			}
+			lExporter->Export(lScene);
+			lExporter->Destroy();
 
 			FILE* fhavok;
 			std::string currentHavokFileName = fns[i] + ".hkx"; //extension not sure

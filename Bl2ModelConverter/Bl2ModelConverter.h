@@ -10,7 +10,6 @@ namespace Bl2ModelConverter {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::Runtime::InteropServices;
-
 	/// <summary>
 	/// Summary for Bl2ModelConverter
 	/// </summary>
@@ -52,6 +51,8 @@ namespace Bl2ModelConverter {
 	private: System::Windows::Forms::ColumnHeader^ columnHeader1;
 	private: System::Windows::Forms::SaveFileDialog^ saveFileDialog1;
 	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::OpenFileDialog^ openFileDialog2;
 
 
 	public:
@@ -72,6 +73,8 @@ namespace Bl2ModelConverter {
 			this->columnHeader1 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->openFileDialog2 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -130,11 +133,26 @@ namespace Bl2ModelConverter {
 			this->label1->TabIndex = 4;
 			this->label1->Text = L"Currently supports PMDL and PTEX";
 			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(554, 301);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(75, 23);
+			this->button3->TabIndex = 5;
+			this->button3->Text = L"Import";
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &Bl2ModelConverter::button3_Click);
+			// 
+			// openFileDialog2
+			// 
+			this->openFileDialog2->FileName = L"openFileDialog2";
+			// 
 			// Bl2ModelConverter
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(891, 473);
+			this->Controls->Add(this->button3);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->button2);
@@ -182,12 +200,10 @@ namespace Bl2ModelConverter {
 			{
 				filter = "DirectDraw Surface (*.dds)|*.dds";
 			}
-			/*
 			else if (selected[i]->Text == "PCOL")
 			{
 				filter = "Havok Packed file (*.hkx)|*.hkx";
 			}
-			*/
 			else
 			{
 				MessageBox::Show("Sorry, this type is not supported yet.");
@@ -214,5 +230,13 @@ namespace Bl2ModelConverter {
 			trb.readData(indices, fn);
 		}
 	}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	saveFileDialog1->Filter = "DirectDraw Surface (*.dds)|*.dds";
+	if (openFileDialog2->ShowDialog() == Windows::Forms::DialogResult::OK)
+	{
+
+	}
+
+}
 };
 }
