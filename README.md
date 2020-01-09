@@ -1,4 +1,4 @@
-# Bl2ModelConverter [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/AdventureT/bl2modelconverter?branch=master&svg=true)](https://ci.appveyor.com/project/krlmlr/r-appveyor/branch/master) 
+# Bl2ModelConverter [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/AdventureT/bl2modelconverter?branch=master&svg=true)](https://ci.appveyor.com/project/AdventureT/bl2modelconverter) 
 This Program extracts trb files from the Prime engine.
 
 
