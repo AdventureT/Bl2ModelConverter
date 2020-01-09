@@ -203,7 +203,7 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 				}
 				FbxHelper::Model m = { vertices,faces,normals,uvs,verticesCount,facesCount,SubInfoCount, "test" };
 				FbxHelper fbxH;
-				fbxH.CreateFbx(m,fns[i]);
+				fbxH.CreateFbx(m, fns[i]);
 			}
 			subInfoStarts.clear();
 			subInfoDatas.clear();
@@ -266,7 +266,7 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 				subcols.push_back({ ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f) });
 				verticesCount.push_back(subcols[i].vertCount / 3);
 				facesCount.push_back(subcols[i].faceCount);
-				
+
 			}
 
 			std::vector<float> vertices;
@@ -290,7 +290,7 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			FbxHelper::Model m = { vertices,faces,std::vector<float>(),std::vector<float>(),verticesCount,facesCount,collosionModelInfoCount, "test" };
 			FbxHelper fbxH;
 			fbxH.CreateFbx(m, fns[i]);
-			
+
 			FILE* fhavok;
 			std::string currentHavokFileName = fns[i] + ".hkx"; //extension not sure
 			if (fopen_s(&fhavok, currentHavokFileName.c_str(), "wb") != 0) // Security check
@@ -305,9 +305,21 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 				fwrite(&havokFile[i], 1, 1, fhavok);
 			}
 			fclose(fhavok);
-			
-		}
-	}
-	
 
+		}
+	else if (tagInfos[indices[i]].tag == "tskl") //Skeleton Probably has some 4x4 Matrices
+	{
+	std::string label = ReadString(f, 4);
+	long zero = ReadLong(f);
+	long relocationDataCount = ReadLong(f); //?? Unsure
+	zero = ReadLong(f);
+	long skeletonTextOffset = ReadLong(f);
+	fseek(f, 28, SEEK_CUR);
+	long someCount = ReadLong(f);
+	long noClue = ReadLong(f);
+	long matricesStartOffset = ReadLong(f);
+	zero = ReadLong(f);
+	long secondSectionOffset = ReadLong(f);
+	}
 }
+
