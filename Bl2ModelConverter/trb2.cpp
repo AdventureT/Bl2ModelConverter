@@ -307,19 +307,19 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			fclose(fhavok);
 
 		}
-	else if (tagInfos[indices[i]].tag == "tskl") //Skeleton Probably has some 4x4 Matrices
-	{
-	std::string label = ReadString(f, 4);
-	long zero = ReadLong(f);
-	long relocationDataCount = ReadLong(f); //?? Unsure
-	zero = ReadLong(f);
-	long skeletonTextOffset = ReadLong(f);
-	fseek(f, 28, SEEK_CUR);
-	long someCount = ReadLong(f);
-	long noClue = ReadLong(f);
-	long matricesStartOffset = ReadLong(f);
-	zero = ReadLong(f);
-	long secondSectionOffset = ReadLong(f);
+		else if (tagInfos[indices[i]].tag == "tskl") //Skeleton Probably has some 4x4 Matrices
+		{
+			std::string label = ReadString(f, 4);
+			long zero = ReadLong(f);
+			long relocationDataCount = ReadLong(f); //?? Unsure
+			zero = ReadLong(f);
+			long skeletonTextOffset = ReadLong(f);
+			fseek(f, 28, SEEK_CUR);
+			long someCount = ReadLong(f);
+			long noClue = ReadLong(f);
+			long matricesStartOffset = ReadLong(f);
+			zero = ReadLong(f);
+			long secondSectionOffset = ReadLong(f);
+		}
 	}
 }
-
