@@ -33,16 +33,22 @@ namespace Bl2ModelConverter {
 			if (components)
 			{
 				delete components;
+				delete filename;
+				delete trb;
 			}
 		}
 	private: System::Windows::Forms::Button^ button1;
 	protected:
-
 	private:
+		///Path to the Trb file
+		char* filename = new char[256];
+		///Trb file as global resource
+		trb2* trb;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		System::ComponentModel::Container ^components;
+
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog1;
 	private: System::Windows::Forms::Button^ button2;
 
@@ -53,10 +59,13 @@ namespace Bl2ModelConverter {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog2;
+	private: System::Windows::Forms::RichTextBox^ richTextBox1;
+
+	private: System::Windows::Forms::ComboBox^ comboBox2;
+	private: System::Windows::Forms::TextBox^ textBox1;
 
 
 	public:
-		   char* filename = new char[256];
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -75,11 +84,14 @@ namespace Bl2ModelConverter {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->openFileDialog2 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
+			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->SuspendLayout();
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(174, 392);
+			this->button1->Location = System::Drawing::Point(66, 392);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(138, 23);
 			this->button1->TabIndex = 0;
@@ -93,7 +105,7 @@ namespace Bl2ModelConverter {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(554, 170);
+			this->button2->Location = System::Drawing::Point(257, 392);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(85, 23);
 			this->button2->TabIndex = 1;
@@ -127,7 +139,7 @@ namespace Bl2ModelConverter {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(511, 196);
+			this->label1->Location = System::Drawing::Point(186, 30);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(176, 13);
 			this->label1->TabIndex = 4;
@@ -135,7 +147,8 @@ namespace Bl2ModelConverter {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(554, 301);
+			this->button3->Enabled = false;
+			this->button3->Location = System::Drawing::Point(670, 438);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 5;
@@ -147,11 +160,39 @@ namespace Bl2ModelConverter {
 			// 
 			this->openFileDialog2->FileName = L"openFileDialog2";
 			// 
+			// richTextBox1
+			// 
+			this->richTextBox1->Location = System::Drawing::Point(515, 58);
+			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->ReadOnly = true;
+			this->richTextBox1->Size = System::Drawing::Size(364, 298);
+			this->richTextBox1->TabIndex = 6;
+			this->richTextBox1->Text = L"";
+			// 
+			// comboBox2
+			// 
+			this->comboBox2->FormattingEnabled = true;
+			this->comboBox2->Location = System::Drawing::Point(570, 392);
+			this->comboBox2->Name = L"comboBox2";
+			this->comboBox2->Size = System::Drawing::Size(121, 21);
+			this->comboBox2->TabIndex = 8;
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(725, 392);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(100, 20);
+			this->textBox1->TabIndex = 9;
+			this->textBox1->TextChanged += gcnew System::EventHandler(this, &Bl2ModelConverter::textBox1_TextChanged);
+			// 
 			// Bl2ModelConverter
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(891, 473);
+			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->comboBox2);
+			this->Controls->Add(this->richTextBox1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->listView1);
@@ -169,16 +210,25 @@ namespace Bl2ModelConverter {
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		listView1->Items->Clear();
+		textBox1->Clear();
+		comboBox2->Text = "";
+		comboBox2->Items->Clear();
+		richTextBox1->Clear();
+		if (trb != NULL && trb->f != NULL)
+		{
+			fclose(trb->f);
+		}
 		openFileDialog1->FileName = "Select a Trb Model file";
 		openFileDialog1->Filter = "Trb Model file (*.trb)|*.trb";
 		openFileDialog1->Title = "Open Trb Model File";
 		openFileDialog1->Multiselect = false;
 		if (openFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK)
+		{
 			filename = (char*)(void*)Marshal::StringToHGlobalAnsi(openFileDialog1->FileName);
-			Trb2::trb2 trb = Trb2::trb2::trb2(filename,1);
-			trb.readHeader();
-			std::vector<std::string> dataInfo = trb.readListBoxInfos();
-			for (int i = 0; i < dataInfo.size(); i+=3)
+			trb = new trb2(filename, 1);
+			trb->readHeader();
+			std::vector<std::string> dataInfo = trb->readListBoxInfos();
+			for (size_t i = 0; i < dataInfo.size(); i+=3)
 			{
 				ListViewItem^ lvi = gcnew ListViewItem(gcnew System::String(dataInfo[i].c_str()));
 				lvi->SubItems->Add(gcnew System::String(dataInfo[i+1].c_str()));
@@ -186,6 +236,7 @@ namespace Bl2ModelConverter {
 				listView1->Items->Add(lvi);
 			}
 			listView1->Sorting = SortOrder::Ascending;
+		}
 	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 		auto selected = listView1->SelectedItems;
@@ -204,6 +255,30 @@ namespace Bl2ModelConverter {
 			{
 				filter = "Havok Packed file (*.hkx)|*.hkx";
 			}
+			else if (selected[i]->Text == "PMML")
+			{
+				filter = "Filmbox Model File (*.fbx)|*.fbx";
+			}
+			else if (selected[i]->Text == "PMST")
+			{
+				filter = "Filmbox Model File (*.fbx)|*.fbx";
+			}
+			else if (selected[i]->Text == "tskl")
+			{
+				filter = "Filmbox Model File (*.fbx)|*.fbx";
+			}
+			else if (selected[i]->Text == "tcmt")
+			{
+				filter = "Filmbox Model File (*.fbx)|*.fbx";
+			}
+			else if (selected[i]->Text == "tcmd")
+			{
+				filter = "Filmbox Model File (*.fbx)|*.fbx";
+			}
+			else if (selected[i]->SubItems[1]->Text == "scor")
+			{
+				filter = "Filmbox Model File (*.fbx)|*.fbx";
+			}
 			else
 			{
 				MessageBox::Show("Sorry, this type is not supported yet.");
@@ -215,6 +290,7 @@ namespace Bl2ModelConverter {
 		saveFileDialog1->Title = "Save";
 		if (saveFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK)
 		{
+			richTextBox1->Clear();
 			System::IO::FileInfo^ fi = gcnew System::IO::FileInfo(saveFileDialog1->FileName);
 			std::string dir = (char*)(void*)Marshal::StringToHGlobalAnsi(fi->DirectoryName);
 			dir += "\\";
@@ -225,18 +301,24 @@ namespace Bl2ModelConverter {
 				fn.push_back(dir + (char*)(void*)Marshal::StringToHGlobalAnsi(selected[i]->SubItems[1]->Text));
 				indices.push_back(int::Parse(selected[i]->SubItems[2]->Text));
 			}
-			Trb2::trb2 trb = Trb2::trb2::trb2(filename, 1);
-			trb.readHeader();
-			trb.readData(indices, fn);
+			std::string output = trb->readData(indices, fn);
+			for (size_t i = 0; i < trb->si.size(); i++)
+			{
+				comboBox2->Items->Add(gcnew System::String(trb->si[i].scoringName.c_str()));
+			}
+			richTextBox1->AppendText(gcnew String(output.c_str()));
+			button3->Enabled = true;
 		}
 	}
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-	saveFileDialog1->Filter = "DirectDraw Surface (*.dds)|*.dds";
-	if (openFileDialog2->ShowDialog() == Windows::Forms::DialogResult::OK)
+	if (textBox1->Text == "" || comboBox2->Text == "")
 	{
-
+		MessageBox::Show("Please enter correct values");
+		return;
 	}
-
+	trb->writeScoringData(Convert::ToSingle(textBox1->Text),comboBox2->SelectedIndex);
+}
+private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }

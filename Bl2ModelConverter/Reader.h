@@ -3,20 +3,21 @@
 #include "umHalf.h"
 #include <string>
 #include <vector>
+using namespace std;
 	class Reader
 	{
 	public:
-		char ReadByte(FILE* f);
+		uint8_t ReadByte(FILE* f);
 
-		unsigned char ReadUByte(FILE* f);
-
-		char* ReadBytes(FILE* f, int amount);
-
-		std::vector<unsigned char> ReadUBytes(FILE* f, int amount);
+		vector<uint8_t> Reader::ReadBytes(FILE* f, int amount);
 
 		short ReadShort(FILE* f);
 
 		unsigned short ReadUShort(FILE* f);
+
+		uint32_t ReadUInt(FILE* f);
+
+		int32_t ReadInt(FILE* f);
 
 		half ReadHalfFloat(FILE* f);
 

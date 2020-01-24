@@ -1,0 +1,332 @@
+\hypertarget{class_half_float}{}\doxysection{Half\+Float Class Reference}
+\label{class_half_float}\index{HalfFloat@{HalfFloat}}
+
+
+{\ttfamily \#include $<$um\+Half.\+h$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+union \mbox{\hyperlink{union_half_float_1_1_i_e_e_e_double}{I\+E\+E\+E\+Double}}
+\item 
+union \mbox{\hyperlink{union_half_float_1_1_i_e_e_e_single}{I\+E\+E\+E\+Single}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_half_float_af0fe4766fcfbdae3bed23b8adce9aba9}\label{class_half_float_af0fe4766fcfbdae3bed23b8adce9aba9}} 
+enum \{ {\bfseries B\+I\+T\+S\+\_\+\+M\+A\+N\+T\+I\+S\+SA} = 10
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_a1e374dea27ce6dc8d02f54f8b0f924de}\label{class_half_float_a1e374dea27ce6dc8d02f54f8b0f924de}} 
+enum \{ {\bfseries B\+I\+T\+S\+\_\+\+E\+X\+P\+O\+N\+E\+NT} = 5
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_a7aec6b9f80901b3c781b4226817891b6}\label{class_half_float_a7aec6b9f80901b3c781b4226817891b6}} 
+enum \{ {\bfseries M\+A\+X\+\_\+\+E\+X\+P\+O\+N\+E\+N\+T\+\_\+\+V\+A\+L\+UE} = 31
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_a4c3996b34ca97f35e03cb95b33c47cce}\label{class_half_float_a4c3996b34ca97f35e03cb95b33c47cce}} 
+enum \{ {\bfseries B\+I\+AS} = M\+A\+X\+\_\+\+E\+X\+P\+O\+N\+E\+N\+T\+\_\+\+V\+A\+L\+U\+E/2
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_a5441dc106883c3a6e9a8263fbbbd6bc2}\label{class_half_float_a5441dc106883c3a6e9a8263fbbbd6bc2}} 
+enum \{ {\bfseries M\+A\+X\+\_\+\+E\+X\+P\+O\+N\+E\+NT} = B\+I\+AS
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_a063d9562fc97e18e6b228a57364ad3ba}\label{class_half_float_a063d9562fc97e18e6b228a57364ad3ba}} 
+enum \{ {\bfseries M\+I\+N\+\_\+\+E\+X\+P\+O\+N\+E\+NT} = -\/B\+I\+AS
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_a847016c0689f0e62e2f72fe0688fd316}\label{class_half_float_a847016c0689f0e62e2f72fe0688fd316}} 
+enum \{ {\bfseries M\+A\+X\+\_\+\+E\+X\+P\+O\+N\+E\+N\+T10} = 9
+ \}
+\item 
+\mbox{\Hypertarget{class_half_float_ab2f539e2e71f2cbe717d1b25fce4d046}\label{class_half_float_ab2f539e2e71f2cbe717d1b25fce4d046}} 
+enum \{ {\bfseries M\+I\+N\+\_\+\+E\+X\+P\+O\+N\+E\+N\+T10} = -\/9
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_half_float_ab91429add579e3f988755346ea9e5262}{Half\+Float}} ()
+\item 
+\mbox{\hyperlink{class_half_float_af8a3b5883d221815f02b985baff19bef}{Half\+Float}} (const \mbox{\hyperlink{class_half_float}{Half\+Float}} \&other)
+\item 
+\mbox{\hyperlink{class_half_float_a3641aae19fea7008a49ae08602ca371f}{Half\+Float}} (uint16\+\_\+t \+\_\+m, uint16\+\_\+t \+\_\+e, uint16\+\_\+t \+\_\+s)
+\item 
+\mbox{\hyperlink{class_half_float_a5b6baf33cb8df3c7063032d40a65920d}{Half\+Float}} (float other)
+\item 
+\mbox{\hyperlink{class_half_float_a6184e2044d8b4ad759c6ae5cef1a34d9}{Half\+Float}} (const double)
+\item 
+\mbox{\hyperlink{class_half_float_ac5cfaf6c469bcb23154e105e6ae5f7f6}{operator float}} () const
+\item 
+\mbox{\hyperlink{class_half_float_ad128eeb0e7e55179b099811c310fe7e7}{operator double}} () const
+\item 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& \mbox{\hyperlink{class_half_float_acd453338eb67f248c854f9ede367fc5d}{operator=}} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other)
+\item 
+\mbox{\Hypertarget{class_half_float_af64fa8ecd35f7c13f029d93530aca657}\label{class_half_float_af64fa8ecd35f7c13f029d93530aca657}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator=} (float other)
+\item 
+\mbox{\Hypertarget{class_half_float_a5bbfbd2a12ce939170c91311b8a7a187}\label{class_half_float_a5bbfbd2a12ce939170c91311b8a7a187}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator=} (const double other)
+\item 
+bool \mbox{\hyperlink{class_half_float_af288bc879ad1d99bb011465f154d8f10}{operator==}} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other) const
+\item 
+\mbox{\Hypertarget{class_half_float_a7de09537284efb5d254142cb355d7093}\label{class_half_float_a7de09537284efb5d254142cb355d7093}} 
+bool {\bfseries operator!=} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other) const
+\item 
+bool \mbox{\hyperlink{class_half_float_a1aca2ab3d051e206ce6666df16a208a6}{operator$<$}} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other) const
+\item 
+\mbox{\Hypertarget{class_half_float_a043276beb7c7133004a76d7e224bb3f0}\label{class_half_float_a043276beb7c7133004a76d7e224bb3f0}} 
+bool {\bfseries operator$>$} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other) const
+\item 
+\mbox{\Hypertarget{class_half_float_aedb5b76c1ee727fb8e5f58d6799751db}\label{class_half_float_aedb5b76c1ee727fb8e5f58d6799751db}} 
+bool {\bfseries operator$<$=} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other) const
+\item 
+\mbox{\Hypertarget{class_half_float_a3de3e4599a1e5903bb2ad737a967138a}\label{class_half_float_a3de3e4599a1e5903bb2ad737a967138a}} 
+bool {\bfseries operator$>$=} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other) const
+\item 
+\mbox{\Hypertarget{class_half_float_ab7af722c1766b103795b953478cb4315}\label{class_half_float_ab7af722c1766b103795b953478cb4315}} 
+bool {\bfseries operator$<$} (float other) const
+\item 
+\mbox{\Hypertarget{class_half_float_a8d3c6cfc496b9c3699a5d0ccd3db1733}\label{class_half_float_a8d3c6cfc496b9c3699a5d0ccd3db1733}} 
+bool {\bfseries operator$>$} (float other) const
+\item 
+\mbox{\Hypertarget{class_half_float_aea44ac225aee452913724c512f97a77e}\label{class_half_float_aea44ac225aee452913724c512f97a77e}} 
+bool {\bfseries operator$<$=} (float other) const
+\item 
+\mbox{\Hypertarget{class_half_float_aeaa77b70cb96d151cc35aa63448aca0a}\label{class_half_float_aeaa77b70cb96d151cc35aa63448aca0a}} 
+bool {\bfseries operator$>$=} (float other) const
+\item 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& \mbox{\hyperlink{class_half_float_ae8287740313b157b02d1f9152c5b5805}{operator+=}} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other)
+\item 
+\mbox{\Hypertarget{class_half_float_a93e1f0f0a2dd2fc02f4dfcdbee6e89e4}\label{class_half_float_a93e1f0f0a2dd2fc02f4dfcdbee6e89e4}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator-\/=} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other)
+\item 
+\mbox{\Hypertarget{class_half_float_a259b2eb294229b40a6c1674fd39d2252}\label{class_half_float_a259b2eb294229b40a6c1674fd39d2252}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator$\ast$=} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other)
+\item 
+\mbox{\Hypertarget{class_half_float_a6ff72c3d38aee16b0a2aca8d15aea4be}\label{class_half_float_a6ff72c3d38aee16b0a2aca8d15aea4be}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator/=} (\mbox{\hyperlink{class_half_float}{Half\+Float}} other)
+\item 
+\mbox{\Hypertarget{class_half_float_adb215be4b804354b3f5bf611189beadd}\label{class_half_float_adb215be4b804354b3f5bf611189beadd}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator+=} (float other)
+\item 
+\mbox{\Hypertarget{class_half_float_a5f5ff72e23d28f6b268a37a84a96819f}\label{class_half_float_a5f5ff72e23d28f6b268a37a84a96819f}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator-\/=} (float other)
+\item 
+\mbox{\Hypertarget{class_half_float_aa0095ce7c806214d37c46621e63c410c}\label{class_half_float_aa0095ce7c806214d37c46621e63c410c}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator$\ast$=} (float other)
+\item 
+\mbox{\Hypertarget{class_half_float_afd89800fb45af0c9a0371006e9931536}\label{class_half_float_afd89800fb45af0c9a0371006e9931536}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& {\bfseries operator/=} (float other)
+\item 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& \mbox{\hyperlink{class_half_float_a9157d3ad0434e11d4fbc4a43f891536f}{operator++}} ()
+\item 
+\mbox{\Hypertarget{class_half_float_aede7b0825dc7db723cebf5f1238d7a34}\label{class_half_float_aede7b0825dc7db723cebf5f1238d7a34}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} {\bfseries operator++} (int)
+\item 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \& \mbox{\hyperlink{class_half_float_a6b6b5079e907800e7fc8058809e4ebf2}{operator-\/-\/}} ()
+\item 
+\mbox{\Hypertarget{class_half_float_acac98e028d51b8d0ffd3b81a3f6fe2b2}\label{class_half_float_acac98e028d51b8d0ffd3b81a3f6fe2b2}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} {\bfseries operator-\/-\/} (int)
+\item 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \mbox{\hyperlink{class_half_float_a81085f2902c65d076e593d6149196a97}{operator-\/}} () const
+\item 
+uint16\+\_\+t \mbox{\hyperlink{class_half_float_a672f12521abc930248e97791f136d52e}{Get\+Bits}} () const
+\item 
+\mbox{\Hypertarget{class_half_float_a7997cde09ee2b6cd45b95d9faea61460}\label{class_half_float_a7997cde09ee2b6cd45b95d9faea61460}} 
+uint16\+\_\+t \& {\bfseries Get\+Bits} ()
+\item 
+bool \mbox{\hyperlink{class_half_float_ab20d03165fb12534f6d1e3a417fa4e20}{Is\+NaN}} () const
+\item 
+\mbox{\Hypertarget{class_half_float_a938f4440d18297ec83e8555b106d28af}\label{class_half_float_a938f4440d18297ec83e8555b106d28af}} 
+bool {\bfseries Is\+Infinity} () const
+\item 
+\mbox{\Hypertarget{class_half_float_a99a3fc8f51c674573cbfefa621d65be8}\label{class_half_float_a99a3fc8f51c674573cbfefa621d65be8}} 
+bool {\bfseries Is\+Denorm} () const
+\item 
+bool \mbox{\hyperlink{class_half_float_a09d00cbb74f2e2d1f4b70e50c24d982e}{Get\+Sign}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_half_float_acfc60c7ec42761fb94fc382e697d6e58}\label{class_half_float_acfc60c7ec42761fb94fc382e697d6e58}} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>uint16\_t {\bfseries bits}\\
+\>struct \{\\
+\>\>uint16\_t {\bfseries Frac}: 10\\
+\>\>uint16\_t {\bfseries Exp}: 5\\
+\>\>uint16\_t {\bfseries Sign}: 1\\
+\>\} {\bfseries IEEE}\\
+\}; \\
+
+\end{tabbing}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_half_float_a8f5408b3ac90aa6509020696e3aa73c5}\label{class_half_float_a8f5408b3ac90aa6509020696e3aa73c5}} 
+static const uint64\+\_\+t {\bfseries I\+E\+E\+E\+Double\+\_\+\+Max\+Expontent} = 0x7\+FF
+\item 
+\mbox{\Hypertarget{class_half_float_ada85c921f18aa26a5d2c81b61948ac9d}\label{class_half_float_ada85c921f18aa26a5d2c81b61948ac9d}} 
+static const uint64\+\_\+t {\bfseries I\+E\+E\+E\+Double\+\_\+\+Exponent\+Bias} = I\+E\+E\+E\+Double\+\_\+\+Max\+Expontent / 2
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} \mbox{\hyperlink{class_half_float_a5f975f4dd35f8d1c0aab62c8e412d27a}{operator+}} (\mbox{\hyperlink{class_half_float}{Half\+Float}}, \mbox{\hyperlink{class_half_float}{Half\+Float}})
+\item 
+\mbox{\Hypertarget{class_half_float_a922151798809dcff25448a22c8b3e983}\label{class_half_float_a922151798809dcff25448a22c8b3e983}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} {\bfseries operator-\/} (\mbox{\hyperlink{class_half_float}{Half\+Float}}, \mbox{\hyperlink{class_half_float}{Half\+Float}})
+\item 
+\mbox{\Hypertarget{class_half_float_a32caa0a9adc4b6b3abd5af7124d9f47b}\label{class_half_float_a32caa0a9adc4b6b3abd5af7124d9f47b}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} {\bfseries operator$\ast$} (\mbox{\hyperlink{class_half_float}{Half\+Float}}, \mbox{\hyperlink{class_half_float}{Half\+Float}})
+\item 
+\mbox{\Hypertarget{class_half_float_a744b5616f2cac2faea7ab5216984e981}\label{class_half_float_a744b5616f2cac2faea7ab5216984e981}} 
+\mbox{\hyperlink{class_half_float}{Half\+Float}} {\bfseries operator/} (\mbox{\hyperlink{class_half_float}{Half\+Float}}, \mbox{\hyperlink{class_half_float}{Half\+Float}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+\begin{DoxyEnumerate}
+\item Represents a half-\/precision floating point value (16 bits) that behaves nearly conformant to the I\+EE 754 standard for floating-\/point computations.
+\end{DoxyEnumerate}
+
+Not all operators have special implementations, most perform time-\/consuming conversions from half to float and back again. Differences to I\+E\+EE 754\+:
+\begin{DoxyItemize}
+\item no difference between qnan and snan
+\item no traps
+\item no well-\/defined rounding mode 
+\end{DoxyItemize}
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_half_float_ab91429add579e3f988755346ea9e5262}\label{class_half_float_ab91429add579e3f988755346ea9e5262}} 
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{HalfFloat()}{HalfFloat()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily Half\+Float\+::\+Half\+Float (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Default constructor. Unitialized by default. \mbox{\Hypertarget{class_half_float_af8a3b5883d221815f02b985baff19bef}\label{class_half_float_af8a3b5883d221815f02b985baff19bef}} 
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{HalfFloat()}{HalfFloat()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily Half\+Float\+::\+Half\+Float (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_half_float}{Half\+Float}} \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Construction from an existing half \mbox{\Hypertarget{class_half_float_a3641aae19fea7008a49ae08602ca371f}\label{class_half_float_a3641aae19fea7008a49ae08602ca371f}} 
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{HalfFloat()}{HalfFloat()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily Half\+Float\+::\+Half\+Float (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{\+\_\+m,  }\item[{uint16\+\_\+t}]{\+\_\+e,  }\item[{uint16\+\_\+t}]{\+\_\+s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Construction from existing values for mantissa, sign and exponent. No validation is performed. \begin{DoxyNote}{Note}
+The exponent is unsigned and biased by \#\+B\+I\+AS 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_half_float_a5b6baf33cb8df3c7063032d40a65920d}\label{class_half_float_a5b6baf33cb8df3c7063032d40a65920d}} 
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{HalfFloat()}{HalfFloat()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily Half\+Float\+::\+Half\+Float (\begin{DoxyParamCaption}\item[{float}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Construction from a single-\/precision float \mbox{\Hypertarget{class_half_float_a6184e2044d8b4ad759c6ae5cef1a34d9}\label{class_half_float_a6184e2044d8b4ad759c6ae5cef1a34d9}} 
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\index{HalfFloat@{HalfFloat}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{HalfFloat()}{HalfFloat()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily Half\+Float\+::\+Half\+Float (\begin{DoxyParamCaption}\item[{const double}]{p\+\_\+\+Reference }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Construction from a double-\/precision float 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_half_float_a672f12521abc930248e97791f136d52e}\label{class_half_float_a672f12521abc930248e97791f136d52e}} 
+\index{HalfFloat@{HalfFloat}!GetBits@{GetBits}}
+\index{GetBits@{GetBits}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{GetBits()}{GetBits()}}
+{\footnotesize\ttfamily uint16\+\_\+t \& Half\+Float\+::\+Get\+Bits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Provides direct access to the bits of a half float \mbox{\Hypertarget{class_half_float_a09d00cbb74f2e2d1f4b70e50c24d982e}\label{class_half_float_a09d00cbb74f2e2d1f4b70e50c24d982e}} 
+\index{HalfFloat@{HalfFloat}!GetSign@{GetSign}}
+\index{GetSign@{GetSign}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{GetSign()}{GetSign()}}
+{\footnotesize\ttfamily bool Half\+Float\+::\+Get\+Sign (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Returns the sign of the floating-\/point value -\/ true stands for positive. \mbox{\Hypertarget{class_half_float_ab20d03165fb12534f6d1e3a417fa4e20}\label{class_half_float_ab20d03165fb12534f6d1e3a417fa4e20}} 
+\index{HalfFloat@{HalfFloat}!IsNaN@{IsNaN}}
+\index{IsNaN@{IsNaN}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{IsNaN()}{IsNaN()}}
+{\footnotesize\ttfamily bool Half\+Float\+::\+Is\+NaN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Classification of floating-\/point types \mbox{\Hypertarget{class_half_float_ad128eeb0e7e55179b099811c310fe7e7}\label{class_half_float_ad128eeb0e7e55179b099811c310fe7e7}} 
+\index{HalfFloat@{HalfFloat}!operator double@{operator double}}
+\index{operator double@{operator double}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator double()}{operator double()}}
+{\footnotesize\ttfamily Half\+Float\+::operator double (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Conversion operator to convert from half to double \mbox{\Hypertarget{class_half_float_ac5cfaf6c469bcb23154e105e6ae5f7f6}\label{class_half_float_ac5cfaf6c469bcb23154e105e6ae5f7f6}} 
+\index{HalfFloat@{HalfFloat}!operator float@{operator float}}
+\index{operator float@{operator float}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator float()}{operator float()}}
+{\footnotesize\ttfamily Half\+Float\+::operator float (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Conversion operator to convert from half to float \mbox{\Hypertarget{class_half_float_a9157d3ad0434e11d4fbc4a43f891536f}\label{class_half_float_a9157d3ad0434e11d4fbc4a43f891536f}} 
+\index{HalfFloat@{HalfFloat}!operator++@{operator++}}
+\index{operator++@{operator++}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator++()}{operator++()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_half_float}{Half\+Float}} \& Half\+Float\+::operator++ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Post and prefix increment operators \mbox{\Hypertarget{class_half_float_ae8287740313b157b02d1f9152c5b5805}\label{class_half_float_ae8287740313b157b02d1f9152c5b5805}} 
+\index{HalfFloat@{HalfFloat}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator+=()}{operator+=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_half_float}{Half\+Float}} \& Half\+Float\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_half_float}{Half\+Float}}}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Combined assignment operators \mbox{\Hypertarget{class_half_float_a81085f2902c65d076e593d6149196a97}\label{class_half_float_a81085f2902c65d076e593d6149196a97}} 
+\index{HalfFloat@{HalfFloat}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_half_float}{Half\+Float}} Half\+Float\+::operator-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Unary minus operator \mbox{\Hypertarget{class_half_float_a6b6b5079e907800e7fc8058809e4ebf2}\label{class_half_float_a6b6b5079e907800e7fc8058809e4ebf2}} 
+\index{HalfFloat@{HalfFloat}!operator-\/-\/@{operator-\/-\/}}
+\index{operator-\/-\/@{operator-\/-\/}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator-\/-\/()}{operator--()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_half_float}{Half\+Float}} \& Half\+Float\+::operator-\/-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Post and prefix decrement operators \mbox{\Hypertarget{class_half_float_a1aca2ab3d051e206ce6666df16a208a6}\label{class_half_float_a1aca2ab3d051e206ce6666df16a208a6}} 
+\index{HalfFloat@{HalfFloat}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator$<$()}{operator<()}}
+{\footnotesize\ttfamily bool Half\+Float\+::operator$<$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_half_float}{Half\+Float}}}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Relational comparison operators \mbox{\Hypertarget{class_half_float_acd453338eb67f248c854f9ede367fc5d}\label{class_half_float_acd453338eb67f248c854f9ede367fc5d}} 
+\index{HalfFloat@{HalfFloat}!operator=@{operator=}}
+\index{operator=@{operator=}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_half_float}{Half\+Float}} \& Half\+Float\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_half_float}{Half\+Float}}}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Assignment operator to assign another half to {\itshape this} object. \mbox{\Hypertarget{class_half_float_af288bc879ad1d99bb011465f154d8f10}\label{class_half_float_af288bc879ad1d99bb011465f154d8f10}} 
+\index{HalfFloat@{HalfFloat}!operator==@{operator==}}
+\index{operator==@{operator==}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool Half\+Float\+::operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_half_float}{Half\+Float}}}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Comparison operators 
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_half_float_a5f975f4dd35f8d1c0aab62c8e412d27a}\label{class_half_float_a5f975f4dd35f8d1c0aab62c8e412d27a}} 
+\index{HalfFloat@{HalfFloat}!operator+@{operator+}}
+\index{operator+@{operator+}!HalfFloat@{HalfFloat}}
+\doxysubsubsection{\texorpdfstring{operator+}{operator+}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_half_float}{Half\+Float}} operator+ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_half_float}{Half\+Float}}}]{one,  }\item[{\mbox{\hyperlink{class_half_float}{Half\+Float}}}]{two }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+\begin{DoxyEnumerate}
+\item Binary operations 
+\end{DoxyEnumerate}
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Bl2\+Model\+Converter/um\+Half.\+h\item 
+Bl2\+Model\+Converter/um\+Half.\+inl\end{DoxyCompactItemize}

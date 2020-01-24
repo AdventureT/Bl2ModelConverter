@@ -1,149 +1,129 @@
 #include "trb2.h"
 
 
-Trb2::trb2::trb2(char* fileName, int type)
+trb2::trb2(char* fileName, uint32_t type)
 {
 	filename = fileName;
 	Type = type;
-	//read();
+	if (fopen_s(&f, filename, "rb+") != 0) // Security check
+	{
+		throw "Can't open the trb file";
+	}
 }
 
-void Trb2::trb2::readHeader()
+void trb2::readHeader()
 {
-	if (fopen_s(&f, filename, "rb") != 0) // Security check
-	{
-		throw gcnew System::Exception(gcnew System::String("Can't open the trb file"));
-	}
-	Header header;
-	header.magic = ReadString(f);
-	header.magic2 = ReadLong(f);
-	header.flag1 = ReadShort(f);
-	header.flag2 = ReadShort(f);
-	header.dataInfoCount = ReadLong(f);
-	header.dataInfoSize = ReadLong(f);
-	header.tagCount = ReadLong(f);
-	header.tagSize = ReadLong(f); //Unknown
-	header.relocationDataOffset = ReadLong(f); //SYMB Stride: 12 Count: header.unknownSize / 12?
-	header.relocationDataSize = ReadLong(f);
+	TrbHeader trbHeader(ReadString(f),ReadUInt(f), ReadUShort(f), ReadUShort(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f));
 	fseek(f, 92, SEEK_CUR);
-	for (int i = 0; i < header.dataInfoCount; i++)
+	for (size_t i = 0; i < trbHeader.dataInfoCount; i++)
 	{
-		DataInfo dataInfo = { ReadLong(f), ReadLong(f), ReadLong(f) , ReadLong(f) , ReadLong(f),
-		ReadLong(f), ReadLong(f), ReadLong(f) , ReadLong(f) , ReadLong(f), ReadLong(f), ReadLong(f) };
+		DataInfo dataInfo = { ReadUInt(f), ReadUInt(f), ReadUInt(f) , ReadUInt(f) , ReadUInt(f),
+		ReadUInt(f), ReadUInt(f), ReadUInt(f) , ReadUInt(f) , ReadUInt(f), ReadUInt(f), ReadUInt(f) };
 		dataInfos.push_back(dataInfo);
 	}
-	for (int i = 0; i < header.tagCount; i++)
+	for (size_t i = 0; i < trbHeader.tagCount; i++)
 	{
-		TagInfo tagInfo{ ReadString(f,4), ReadLong(f), ReadLong(f), ReadLong(f) };
+		TagInfo tagInfo;
+		if (ReadLong(f) == 0)
+		{
+			tagInfo = { "", ReadUInt(f), ReadUInt(f), ReadUInt(f) };
+		}
+		else
+		{
+			fseek(f, -4, SEEK_CUR);
+			tagInfo = { ReadString(f,4), ReadUInt(f), ReadUInt(f), ReadUInt(f) };
+		}
 		tagInfos.push_back(tagInfo);
 	}
 	fseek(f, dataInfos[0].dataOffset, SEEK_SET);
-	while (ftell(f) < dataInfos[0].dataOffset + dataInfos[0].dataSize)
+	while ((uint32_t)ftell(f) < dataInfos[0].dataOffset + dataInfos[0].dataSize)
 	{
 		text.push_back(ReadString(f));
 	}
-	fseek(f, header.relocationDataOffset, SEEK_SET);
-	for (int i = 0; i < header.relocationDataSize / 12; i++)
+	fseek(f, trbHeader.relocationDataOffset, SEEK_SET);
+	for (size_t i = 0; i < trbHeader.relocationDataSize / 12; i++)
 	{
-		SYMBInfo symbInfo = { ReadShort(f), ReadShort(f), ReadShort(f),ReadShort(f), ReadLong(f) };
+		SYMBInfo symbInfo = { ReadUShort(f), ReadUShort(f), ReadUShort(f),ReadUShort(f), ReadUInt(f) };
 		symbInfos.push_back(symbInfo);
 	}
 }
 
-std::vector<std::string> Trb2::trb2::readListBoxInfos()
+std::vector<std::string> trb2::readListBoxInfos()
 {
 	vector<string> infos;
-	for (int i = 0; i < tagInfos.size(); i++)
+	for (size_t i = 0; i < tagInfos.size(); i++)
 	{
 		infos.push_back(tagInfos[i].tag); //tag
 		fseek(f, tagInfos[i].textOffset + dataInfos[0].dataOffset, SEEK_SET);
 		infos.push_back(ReadString(f)); //filename
-		infos.push_back((char*)(void*)Marshal::StringToHGlobalAnsi(i.ToString()));
+		infos.push_back(to_string(i));
 	}
 	return infos;
 }
 
-void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
+std::string trb2::readData(vector<int> indices, std::vector<std::string> fns)
 {
-	for (int i = 0; i < indices.size(); i++)
+	std::string output;
+	for (size_t i = 0; i < indices.size(); i++)
 	{
 		fseek(f, tagInfos[indices[i]].dataOffset + dataInfos[1].dataOffset, SEEK_SET);
 		if (tagInfos[indices[i]].tag == "PMDL")
 		{
-			std::vector<float> vertices;
-			std::vector<float> normals;
-			std::vector<float> uvs;
-			std::vector<unsigned long> faces;
-			std::string tag = ReadString(f, 4);
-			long zero = ReadLong(f);
-			short relocationDataCount = ReadShort(f); //?? Unsure
-			short pmdlSize = ReadShort(f);
-			zero = ReadLong(f);
-			long modelTextOffset = ReadLong(f);
-			fseek(f, 36, SEEK_CUR);
-			long sumVertCount = ReadLong(f);
-			long faceStartOffsetRelative = ReadLong(f);
-			long vertexStartOffset = ReadLong(f) + dataInfos[2].dataOffset;
-			fseek(f, 4, SEEK_CUR);
-			long sumFaceCount = ReadLong(f);
-			long faceStartOffset = ReadLong(f);
-			fseek(f, 48, SEEK_CUR);
-			long SubInfoCount = ReadLong(f);
-			long offsetToSubInfosStart = ReadLong(f);
-			long endOfSubInfos = ReadLong(f);
-			/*
-			fseek(f, modelTextOffset + dataInfos[0].dataOffset, SEEK_SET);
-			std::string modelName = ReadString(f);
-			std::string geometry = ReadString(f);
-			std::string name = ReadString(f);
-			*/
-			fseek(f, offsetToSubInfosStart + dataInfos[1].dataOffset, SEEK_SET);
-			for (int b = 0; b < SubInfoCount; b++)
+			vector<float> vertices;
+			vector<float> normals;
+			vector<float> uvs;
+			vector<uint32_t> faces;
+			std::vector<uint32_t> verticesCount;
+			std::vector<uint32_t> facesCount;
+			PMDL pmdl;
+			pmdl.symbolHeader = { ReadString(f, 4), ReadUInt(f), ReadUShort(f), ReadUShort(f), ReadUInt(f), ReadUInt(f), ReadInt(f), ReadUInt(f), ReadUInt(f) };
+			fread(&pmdl.header, sizeof(PMDL::Header), 1, f);
+			fread(&pmdl.coords, sizeof(PMDL::Coords), 1, f);
+			fread(&pmdl.meshInfoTable, sizeof(PMDL::MeshInfoTable), 1, f);
+			fseek(f, pmdl.meshInfoTable.meshInfoOffsetsOffset + dataInfos[1].dataOffset, SEEK_SET);
+			for (size_t j = 0; j < pmdl.meshInfoTable.meshInfoCount; j++)
 			{
-				subInfoStarts.push_back(ReadLong(f));
+				pmdl.meshInfoOffsets.push_back(ReadUInt(f));
 			}
-			long normalUVStart = 0;
-			long normalUVEnd = 0;
-			std::vector<long> normalUVSize;
-			std::vector<long> verticesCount;
-			std::vector<long> facesCount;
-			for (int a = 0; a < SubInfoCount; a++)
+			for (size_t b = 0; b < pmdl.meshInfoTable.meshInfoCount; b++)
 			{
-				fseek(f, subInfoStarts[a] + dataInfos[1].dataOffset, SEEK_SET);
-				SubInfoData subInfoData = { ReadLong(f), ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),
-					ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),
-					ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f),ReadLong(f) };
-				verticesCount.push_back(subInfoData.vertexCount);
-				facesCount.push_back(subInfoData.faceCount);
-				subInfoDatas.push_back(subInfoData);
+				fseek(f, pmdl.meshInfoOffsets[b] + dataInfos[1].dataOffset, SEEK_SET);
+				PMDL::MeshInfo meshInfo;
+				fread(&meshInfo, sizeof(PMDL::MeshInfo), 1, f);
+				pmdl.meshInfos.push_back(meshInfo);
+				verticesCount.push_back(meshInfo.vertexCount);
+				facesCount.push_back(meshInfo.faceCount);
 			}
-			if (SubInfoCount > 1)
+			uint32_t normalUVStart = 0;
+			uint32_t normalUVEnd = 0;
+			std::vector<uint32_t> normalUVSize;
+			if (pmdl.meshInfoTable.meshInfoCount > 1)
 			{
 				int remember = 0;
-				for (int a = 0; a + 1 < SubInfoCount; a++)
+				for (size_t a = 0; a + 1 < pmdl.meshInfoTable.meshInfoCount; a++)
 				{
-					normalUVStart = subInfoDatas[a].normalUVOffset;
-					normalUVEnd = subInfoDatas[a + 1].normalUVOffset;
+					normalUVStart = pmdl.meshInfos[a].normalUVOffset;
+					normalUVEnd = pmdl.meshInfos[a + 1].normalUVOffset;
 					normalUVSize.push_back(normalUVEnd - normalUVStart);
 					remember = a;
 				}
-				normalUVStart = subInfoDatas[remember + 1].normalUVOffset;
-				normalUVEnd = subInfoDatas[remember + 1].faceOffset;
+				normalUVStart = pmdl.meshInfos[remember + 1].normalUVOffset;
+				normalUVEnd = pmdl.meshInfos[remember + 1].faceOffset;
 				normalUVSize.push_back(normalUVEnd - normalUVStart);
 			}
-			else if (SubInfoCount == 1)
+			else if (pmdl.meshInfoTable.meshInfoCount == 1)
 			{
-				normalUVStart = subInfoDatas[0].normalUVOffset;
-				normalUVEnd = subInfoDatas[0].faceOffset;
+				normalUVStart = pmdl.meshInfos[0].normalUVOffset;
+				normalUVEnd = pmdl.meshInfos[0].faceOffset;
 				normalUVSize.push_back(normalUVEnd - normalUVStart);
 			}
-			if (SubInfoCount >= 1)
+			if (pmdl.meshInfoTable.meshInfoCount >= 1)
 			{
-				for (int x = 0; x < SubInfoCount; x++)
+				for (size_t x = 0; x < pmdl.meshInfoTable.meshInfoCount; x++)
 				{
-					int stride = normalUVSize[x] / subInfoDatas[x].vertexCount;
-					fseek(f, vertexStartOffset + subInfoDatas[x].vertexOffsetRelative, SEEK_SET);
-					for (int j = 0; j < subInfoDatas[x].vertexCount; j++)
+					int stride = normalUVSize[x] / pmdl.meshInfos[x].vertexCount;
+					fseek(f, pmdl.header.vertexStartOffset + dataInfos[2].dataOffset + pmdl.meshInfos[x].vertexOffsetRelative, SEEK_SET);
+					for (size_t j = 0; j < pmdl.meshInfos[x].vertexCount; j++)
 					{
 						float vertexX = ReadHalfFloat(f);
 						float vertexY = ReadHalfFloat(f);
@@ -155,8 +135,8 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 						vertices.push_back(vertexZ);
 						vertices.push_back(vertexW);
 					}
-					fseek(f, vertexStartOffset + subInfoDatas[x].normalUVOffset, SEEK_SET);
-					for (int z = 0; z < subInfoDatas[x].vertexCount; z++)
+					fseek(f, pmdl.header.vertexStartOffset + dataInfos[2].dataOffset + pmdl.meshInfos[x].normalUVOffset, SEEK_SET);
+					for (size_t z = 0; z < pmdl.meshInfos[x].vertexCount; z++)
 					{
 						float normalX;
 						float normalY;
@@ -189,8 +169,8 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 						uvs.push_back(uvU);
 						uvs.push_back(-uvV);
 					}
-					fseek(f, vertexStartOffset + subInfoDatas[x].faceOffset + (subInfoDatas[x].previousFaceCount * 2), SEEK_SET);
-					for (int v = 0; v < subInfoDatas[x].faceCount / 3; v++)
+					fseek(f, pmdl.header.vertexStartOffset + dataInfos[2].dataOffset + pmdl.meshInfos[x].faceOffset + (pmdl.meshInfos[x].previousFaceCount * 2), SEEK_SET);
+					for (size_t v = 0; v < pmdl.meshInfos[x].faceCount / 3; v++)
 					{
 						unsigned short faceA = ReadUShort(f);
 						unsigned short faceB = ReadUShort(f);
@@ -201,7 +181,7 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 						faces.push_back(faceC);
 					}
 				}
-				FbxHelper::Model m = { vertices,faces,normals,uvs,verticesCount,facesCount,SubInfoCount, "test" };
+				FbxHelper::Model m = { vertices,faces,normals,uvs,verticesCount,facesCount,pmdl.meshInfoTable.meshInfoCount, "test" };
 				FbxHelper fbxH;
 				fbxH.CreateFbx(m, fns[i]);
 			}
@@ -211,16 +191,12 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 		}
 		else if (tagInfos[indices[i]].tag == "PTEX")
 		{
-			int tell = ftell(f);
-			fseek(f, 88, SEEK_CUR);
-			long width = ReadLong(f);
-			long height = ReadLong(f);
-			long unknown = ReadLong(f);
-			long ddsOffset = ReadLong(f);
-			long ddsSize = ReadLong(f);
-			fseek(f, dataInfos[dataInfos.size() - 1].dataOffset + ddsOffset, SEEK_SET);
-			std::vector<unsigned char> dds;
-			dds = ReadUBytes(f, ddsSize);
+			PTEX ptex;
+			ptex.symbolHeader = { ReadString(f, 4), ReadUInt(f), ReadUShort(f), ReadUShort(f), ReadUInt(f), ReadUInt(f), ReadInt(f), ReadUInt(f), ReadUInt(f) };
+			fread(&ptex.texInfo, sizeof(PTEX::TextureInfo), 1, f);
+			fseek(f, dataInfos[dataInfos.size() - 1].dataOffset + ptex.texInfo.ddsOffset, SEEK_SET);
+			std::vector<uint8_t> dds;
+			dds = ReadBytes(f, ptex.texInfo.ddsSize);
 			FILE* fTex;
 
 			std::string path = filename;
@@ -229,14 +205,13 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			std::string folder = path.substr(0, found + 1);
 			fseek(f, dataInfos[0].dataOffset + tagInfos[indices[i]].textOffset, SEEK_SET);
 			std::string TextureName = ReadString(f);
-			TextureName = TextureName.substr(0, TextureName.length() - 1);
-			TextureName += ".dds";
+			TextureName = TextureName.substr(0, TextureName.length() - 1).append(".dds");
 			folder.append(TextureName);
 			if (fopen_s(&fTex, folder.c_str(), "wb") != 0) // Security check
 			{
-				throw gcnew System::Exception(gcnew System::String("Can't write dds file"));
+				throw "Can't write dds file";
 			}
-			for (long i = 0; i < ddsSize; i++)
+			for (size_t i = 0; i < ptex.texInfo.ddsSize; i++)
 			{
 				fwrite(&dds[i], 1, 1, fTex);
 			}
@@ -245,45 +220,45 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 		else if (tagInfos[indices[i]].tag == "PCOL") //Collosion (Havok file + Model Data)
 		{
 			std::string label = ReadString(f, 4);
-			long zero = ReadLong(f);
-			short relocationDataCount = ReadShort(f); //?? Unsure
-			short pcolSize = ReadShort(f);
+			uint32_t zero = ReadUInt(f);
+			uint16_t relocationDataCount = ReadUShort(f); //?? Unsure
+			uint16_t pcolSize = ReadUShort(f);
 			zero = ReadLong(f);
-			long collosionTextOffset = ReadLong(f);
+			uint32_t collosionTextOffset = ReadUInt(f);
 			fseek(f, 12, SEEK_CUR);
-			long collosionModelInfoCount = ReadLong(f);
-			long havokFileInfoOffset = ReadLong(f);
-			long havokFileOffset = ReadLong(f);
-			long havokFileSize = ReadLong(f);
+			uint32_t collosionModelInfoCount = ReadUInt(f);
+			uint32_t havokFileInfoOffset = ReadUInt(f);
+			uint32_t havokFileOffset = ReadUInt(f);
+			uint32_t havokFileSize = ReadUInt(f);
 
 			fseek(f, havokFileInfoOffset + dataInfos[1].dataOffset, SEEK_SET);
 
 			vector<SubCollsionInfo> subcols;
-			std::vector<long> verticesCount;
-			std::vector<long> facesCount;
-			for (int i = 0; i < collosionModelInfoCount; i++)
+			std::vector<uint32_t> verticesCount;
+			std::vector<uint32_t> facesCount;
+			for (size_t i = 0; i < collosionModelInfoCount; i++)
 			{
-				subcols.push_back({ ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f), ReadLong(f) });
+				subcols.push_back({ ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f) });
 				verticesCount.push_back(subcols[i].vertCount / 3);
 				facesCount.push_back(subcols[i].faceCount);
 
 			}
 
 			std::vector<float> vertices;
-			std::vector<unsigned long> faces;
+			std::vector<uint32_t> faces;
 
-			for (int i = 0; i < collosionModelInfoCount; i++)
+			for (size_t i = 0; i < collosionModelInfoCount; i++)
 			{
 				fseek(f, subcols[i].vertOffset + dataInfos[1].dataOffset, SEEK_SET);
-				for (int j = 0; j < subcols[i].vertCount; j++)
+				for (size_t j = 0; j < subcols[i].vertCount; j++)
 				{
 					vertices.push_back(ReadFloat(f));
 				}
 
 				fseek(f, subcols[i].faceOffset + dataInfos[1].dataOffset, SEEK_SET);
-				for (int j = 0; j < subcols[i].faceCount; j++)
+				for (size_t j = 0; j < subcols[i].faceCount; j++)
 				{
-					faces.push_back(ReadULong(f));
+					faces.push_back(ReadUInt(f));
 				}
 			}
 
@@ -299,15 +274,34 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			}
 			fseek(f, dataInfos[1].dataOffset + havokFileOffset, SEEK_SET);
 			std::vector<unsigned char> havokFile;
-			havokFile = ReadUBytes(f, havokFileSize);
-			for (long i = 0; i < havokFileSize; i++)
+			havokFile = ReadBytes(f, havokFileSize);
+			for (size_t i = 0; i < havokFileSize; i++)
 			{
 				fwrite(&havokFile[i], 1, 1, fhavok);
 			}
 			fclose(fhavok);
 
 		}
-		else if (tagInfos[indices[i]].tag == "tskl") //Skeleton Probably has some 4x4 Matrices
+		else if (tagInfos[indices[i]].tag == "PMML") //Something to do with models and materiels
+		{
+			long tell = ftell(f);
+			std::string label = ReadString(f, 4);
+			long zero = ReadLong(f);
+			long relocationDataCount = ReadLong(f); //?? Unsure
+			zero = ReadLong(f);
+			long pmmlTextOffset = ReadLong(f);
+		}
+		else if (tagInfos[indices[i]].tag == "PMST") //??
+		{
+			std::string label = ReadString(f, 4);
+			long zero = ReadLong(f);
+			long relocationDataCount = ReadLong(f); //?? Unsure
+			zero = ReadLong(f);
+			long pmstTextOffset = ReadLong(f);
+			fseek(f, 12, SEEK_CUR);
+			long unknownCount = ReadLong(f);
+		}
+		else if (tagInfos[indices[i]].tag == "tskl") //Toshi Skeleton
 		{
 			std::string label = ReadString(f, 4);
 			long zero = ReadLong(f);
@@ -315,11 +309,119 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			zero = ReadLong(f);
 			long skeletonTextOffset = ReadLong(f);
 			fseek(f, 28, SEEK_CUR);
-			long someCount = ReadLong(f);
+			long boneCount = ReadLong(f);
 			long noClue = ReadLong(f);
 			long matricesStartOffset = ReadLong(f);
 			zero = ReadLong(f);
 			long secondSectionOffset = ReadLong(f);
+			fseek(f, 20, SEEK_CUR);
+			long boneNamesOffset = ReadLong(f);
+			vector<string> boneNames;
+			fseek(f, dataInfos[1].dataOffset + matricesStartOffset, SEEK_SET);
+			vector<float> matrices;
+			vector<vector<double>> TRS;
+			vector<FbxAMatrix> matlocals;
+			vector<short> parents;
+			for (int i = 0; i < boneCount; i++)
+			{
+				fseek(f, 16, SEEK_CUR);
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				matrices.push_back(ReadFloat(f));
+				fseek(f, 80, SEEK_CUR);
+				long boneNameOffset = ReadLong(f);
+				short parent = ReadShort(f);
+				int retHere = ftell(f);
+				fseek(f, dataInfos[1].dataOffset + boneNameOffset, SEEK_SET);
+				boneNames.push_back(ReadString(f));
+				parents.push_back(parent);
+				fseek(f, retHere, SEEK_SET);
+				output += "Bone ";
+				output += to_string(i + 1);
+				output += ": ";
+				output += boneNames[i].erase(boneNames[i].size() - 1);
+				output += " Parent: ";
+				output += to_string(parent);
+				output += "\n";
+				fseek(f, 10, SEEK_CUR);
+				double T[3];
+				double R[3];
+				double S[3];
+				FbxHelper::Matrix344ToTRS(matrices.data(),T,R,S,0);
+				FbxAMatrix matLocal;
+				matLocal.SetRow(0, FbxVector4(matrices[0], matrices[1], matrices[2], matrices[3]));
+				matLocal.SetRow(1, FbxVector4(matrices[4], matrices[5], matrices[6], matrices[7]));
+				matLocal.SetRow(2, FbxVector4(matrices[8], matrices[9], matrices[10], matrices[11]));
+				matLocal.SetRow(3, FbxVector4(matrices[12], matrices[13], matrices[14], matrices[15]));
+				matlocals.push_back(matLocal);
+				vector<double> trs;
+				trs.push_back(T[0]); trs.push_back(T[1]); trs.push_back(T[2]);
+				trs.push_back(R[0]); trs.push_back(R[1]); trs.push_back(R[2]);
+				trs.push_back(S[0]); trs.push_back(S[1]); trs.push_back(S[2]);
+				TRS.push_back(trs);
+				matrices.clear();
+			}
+			FbxHelper fbxH;
+			fbxH.CreateSkeleton(boneNames, parents, TRS, matlocals);
+		}
+		else if (tagInfos[indices[i]].tag == "tcmt") //Toshi Core Material
+		{
+			long pos = ftell(f);
+			long offsetOrSize = ReadLong(f);
+		}
+		else if (tagInfos[indices[i]].tag == "tcmd") //Toshi Model
+		{
+			long pos = ftell(f);
+		}
+		else if (tagInfos[indices[i]].tag == "")
+		{
+			fseek(f, tagInfos[i].textOffset + dataInfos[0].dataOffset, SEEK_SET);
+			if (ReadString(f,4) == "scor") //Scoring.trb
+			{
+				fseek(f, tagInfos[indices[i]].dataOffset + dataInfos[1].dataOffset, SEEK_SET);
+				scoringInfoOffset = ReadLong(f);
+				long scoringInfoCount = ReadLong(f);
+				fseek(f, scoringInfoOffset + dataInfos[1].dataOffset, SEEK_SET);
+				for (int i = 0; i < scoringInfoCount; i++)
+				{
+					uint32_t scoringNameOffset = ReadUInt(f);
+					long retHere = ftell(f);
+					fseek(f, scoringNameOffset + dataInfos[1].dataOffset, SEEK_SET);
+					string scoringName = ReadString(f);
+					fseek(f, retHere, SEEK_SET);
+					uint32_t unknown = ReadUInt(f);
+					float value = ReadFloat(f);
+					si.push_back({scoringName, scoringNameOffset, unknown, value});
+					output += si[i].scoringName.erase(si[i].scoringName.size() - 1);
+					output += " Value: ";
+					output += to_string(si[i].value);
+					output += "\n";
+				}
+				long offset1 = ReadLong(f);
+				offset1 = ReadLong(f);
+				offset1 = ReadLong(f);
+			}
 		}
 	}
+	return output;
 }
+void trb2::writeScoringData(float scoringValue, int index)
+{
+	fseek(f, scoringInfoOffset + dataInfos[1].dataOffset + index * 12 + 8, SEEK_SET);
+	fwrite(&scoringValue, 4, 1, f);
+}
+
+

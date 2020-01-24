@@ -140,8 +140,12 @@
   <ItemGroup>
     <ClCompile Include="Bl2ModelConverter.cpp" />
     <ClCompile Include="FbxHelper.cpp" />
+    <ClCompile Include="PTEX.cpp" />
+    <ClCompile Include="PMDL.cpp" />
     <ClCompile Include="Reader.cpp" />
+    <ClCompile Include="RelocationData.cpp" />
     <ClCompile Include="trb2.cpp" />
+    <ClCompile Include="TrbHeader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\TrbModelConverter\TrbModelConverter\umHalf.h" />
@@ -149,9 +153,14 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="FbxHelper.h" />
+    <ClInclude Include="PTEX.h" />
+    <ClInclude Include="Symbol.h" />
+    <ClInclude Include="PMDL.h" />
     <ClInclude Include="Reader.h" />
+    <ClInclude Include="RelocationData.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="trb2.h" />
+    <ClInclude Include="TrbHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Bl2ModelConverter.resx">

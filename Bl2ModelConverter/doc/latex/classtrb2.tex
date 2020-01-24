@@ -1,0 +1,86 @@
+\hypertarget{classtrb2}{}\doxysection{trb2 Class Reference}
+\label{classtrb2}\index{trb2@{trb2}}
+Inheritance diagram for trb2\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classtrb2}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structtrb2_1_1_data_info}{Data\+Info}}
+\item 
+struct \mbox{\hyperlink{structtrb2_1_1_scoring_info}{Scoring\+Info}}
+\item 
+struct \mbox{\hyperlink{structtrb2_1_1_sub_collsion_info}{Sub\+Collsion\+Info}}
+\item 
+struct \mbox{\hyperlink{structtrb2_1_1_sub_info_data}{Sub\+Info\+Data}}
+\item 
+struct \mbox{\hyperlink{structtrb2_1_1_s_y_m_b_info}{S\+Y\+M\+B\+Info}}
+\item 
+struct \mbox{\hyperlink{structtrb2_1_1_tag_info}{Tag\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrb2_a52e7589702e11dcc57658d0338dd3b97}\label{classtrb2_a52e7589702e11dcc57658d0338dd3b97}} 
+{\bfseries trb2} (char $\ast$file\+Name, uint32\+\_\+t type)
+\item 
+\mbox{\Hypertarget{classtrb2_a5bbf7b0651fafcf0b26cd196d0d50253}\label{classtrb2_a5bbf7b0651fafcf0b26cd196d0d50253}} 
+void {\bfseries read\+Header} ()
+\item 
+\mbox{\Hypertarget{classtrb2_affcd62c43670155a85baf7535ec5768d}\label{classtrb2_affcd62c43670155a85baf7535ec5768d}} 
+vector$<$ string $>$ {\bfseries read\+List\+Box\+Infos} ()
+\item 
+\mbox{\Hypertarget{classtrb2_ab6aaa185065b87660135d8c3f8641575}\label{classtrb2_ab6aaa185065b87660135d8c3f8641575}} 
+string {\bfseries read\+Data} (vector$<$ int $>$ indices, vector$<$ string $>$ fns)
+\item 
+\mbox{\Hypertarget{classtrb2_a9548c1c928bec725b6a747bfd2018325}\label{classtrb2_a9548c1c928bec725b6a747bfd2018325}} 
+void {\bfseries write\+Scoring\+Data} (float scoring\+Value, int index)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrb2_a9658e504d1857c2c4409efd64584cdc1}\label{classtrb2_a9658e504d1857c2c4409efd64584cdc1}} 
+vector$<$ \mbox{\hyperlink{structtrb2_1_1_scoring_info}{Scoring\+Info}} $>$ {\bfseries si}
+\item 
+\mbox{\Hypertarget{classtrb2_a6d43a17da0f778fcb6f8385b0eaf9038}\label{classtrb2_a6d43a17da0f778fcb6f8385b0eaf9038}} 
+uint32\+\_\+t {\bfseries scoring\+Info\+Offset}
+\item 
+\mbox{\Hypertarget{classtrb2_a985c15f47642a2bbf64706d41c499e65}\label{classtrb2_a985c15f47642a2bbf64706d41c499e65}} 
+F\+I\+LE $\ast$ {\bfseries f}
+\item 
+\mbox{\Hypertarget{classtrb2_ab9784cf8e11c665c41f4798656add5fe}\label{classtrb2_ab9784cf8e11c665c41f4798656add5fe}} 
+uint32\+\_\+t {\bfseries Type}
+\item 
+\mbox{\Hypertarget{classtrb2_ab8b8fdc0f8e96322a39d8e39d2aa8be2}\label{classtrb2_ab8b8fdc0f8e96322a39d8e39d2aa8be2}} 
+char $\ast$ {\bfseries filename} = new char\mbox{[}256\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrb2_a133f1d631a77eac51ca52aac2471e06d}\label{classtrb2_a133f1d631a77eac51ca52aac2471e06d}} 
+vector$<$ \mbox{\hyperlink{structtrb2_1_1_tag_info}{Tag\+Info}} $>$ {\bfseries tag\+Infos}
+\item 
+\mbox{\Hypertarget{classtrb2_ab32b1af83ed42cf510a11dd179d21379}\label{classtrb2_ab32b1af83ed42cf510a11dd179d21379}} 
+vector$<$ \mbox{\hyperlink{structtrb2_1_1_data_info}{Data\+Info}} $>$ {\bfseries data\+Infos}
+\item 
+\mbox{\Hypertarget{classtrb2_ac4e5a2400340692f1dae8167e894299a}\label{classtrb2_ac4e5a2400340692f1dae8167e894299a}} 
+vector$<$ \mbox{\hyperlink{structtrb2_1_1_s_y_m_b_info}{S\+Y\+M\+B\+Info}} $>$ {\bfseries symb\+Infos}
+\item 
+\mbox{\Hypertarget{classtrb2_acc0bd11e848fc8eb2edd5120d5b4ca8c}\label{classtrb2_acc0bd11e848fc8eb2edd5120d5b4ca8c}} 
+vector$<$ \mbox{\hyperlink{structtrb2_1_1_sub_info_data}{Sub\+Info\+Data}} $>$ {\bfseries sub\+Info\+Datas}
+\item 
+\mbox{\Hypertarget{classtrb2_a6fdae542581d0f2fc15cb2d059de7499}\label{classtrb2_a6fdae542581d0f2fc15cb2d059de7499}} 
+vector$<$ string $>$ {\bfseries text}
+\item 
+\mbox{\Hypertarget{classtrb2_a84c8aa4e8d5c79aeac0583d68ccde9a4}\label{classtrb2_a84c8aa4e8d5c79aeac0583d68ccde9a4}} 
+vector$<$ uint32\+\_\+t $>$ {\bfseries sub\+Info\+Starts}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Bl2\+Model\+Converter/trb2.\+h\item 
+Bl2\+Model\+Converter/trb2.\+cpp\end{DoxyCompactItemize}

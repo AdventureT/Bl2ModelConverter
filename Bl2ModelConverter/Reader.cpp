@@ -1,37 +1,22 @@
 #include "Reader.h"
-char Reader::ReadByte(FILE* f)
+uint8_t Reader::ReadByte(FILE* f)
 {
-	unsigned char read;
+	uint8_t read;
 	fread_s(&read, 1, 1, 1, f);
 	return read;
 }
 
-unsigned char Reader::ReadUByte(FILE* f)
+vector<uint8_t> Reader::ReadBytes(FILE* f, int amount)
 {
-	unsigned char read;
-	fread_s(&read, 1, 1, 1, f);
-	return read;
-}
-
-char* Reader::ReadBytes(FILE* f, int amount)
-{
-	char* read = new char[amount];
-	fread_s(&read, amount, amount, 1, f);
-	return read;
-}
-
-std::vector<unsigned char> Reader::ReadUBytes(FILE* f, int amount)
-{
-	std::vector<unsigned char> read;
+	vector<uint8_t> read;
 	for (int i = 0; i < amount; i++)
 	{
-		unsigned char c;
+		uint8_t c;
 		fread_s(&c, 1, 1, 1, f);
 		read.push_back(c);
 	}
 	return read;
 }
-
 
 short Reader::ReadShort(FILE* f)
 {
@@ -40,12 +25,27 @@ short Reader::ReadShort(FILE* f)
 	return read;
 }
 
-unsigned short Reader::ReadUShort(FILE* f)
+uint16_t Reader::ReadUShort(FILE* f)
 {
-	unsigned short read;
+	uint16_t read;
 	fread_s(&read, 2, 2, 1, f);
 	return read;
 }
+
+uint32_t Reader::ReadUInt(FILE* f)
+{
+	uint32_t read;
+	fread_s(&read, 4, 4, 1, f);
+	return read;
+}
+
+int32_t Reader::ReadInt(FILE* f)
+{
+	int32_t read;
+	fread_s(&read, 4, 4, 1, f);
+	return read;
+}
+
 
 half Reader::ReadHalfFloat(FILE* f)
 {
