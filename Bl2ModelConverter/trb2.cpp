@@ -229,7 +229,6 @@ void Trb2::trb2::readData(vector<int> indices, std::vector<std::string> fns)
 			std::string folder = path.substr(0, found + 1);
 			fseek(f, dataInfos[0].dataOffset + tagInfos[indices[i]].textOffset, SEEK_SET);
 			std::string TextureName = ReadString(f);
-			TextureName = TextureName.substr(0, TextureName.length() - 1);
 			TextureName += ".dds";
 			folder.append(TextureName);
 			if (fopen_s(&fTex, folder.c_str(), "wb") != 0) // Security check
