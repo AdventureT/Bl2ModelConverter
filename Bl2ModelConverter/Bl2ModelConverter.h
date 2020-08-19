@@ -131,7 +131,7 @@ namespace Bl2ModelConverter {
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(176, 13);
 			this->label1->TabIndex = 4;
-			this->label1->Text = L"Currently supports PMDL and PTEX";
+			this->label1->Text = L"Currently supports PMDL, PTEX and PCOL";
 			// 
 			// button3
 			// 
