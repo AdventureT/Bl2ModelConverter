@@ -131,7 +131,7 @@ namespace Bl2ModelConverter {
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(176, 13);
 			this->label1->TabIndex = 4;
-			this->label1->Text = L"Currently supports PMDL and PTEX";
+			this->label1->Text = L"Currently supports PMDL, PTEX and PCOL";
 			// 
 			// button3
 			// 
@@ -168,12 +168,12 @@ namespace Bl2ModelConverter {
 	private: System::Void Bl2ModelConverter_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		listView1->Items->Clear();
 		openFileDialog1->FileName = "Select a Trb Model file";
 		openFileDialog1->Filter = "Trb Model file (*.trb)|*.trb";
 		openFileDialog1->Title = "Open Trb Model File";
 		openFileDialog1->Multiselect = false;
 		if (openFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK)
+			listView1->Items->Clear();
 			filename = (char*)(void*)Marshal::StringToHGlobalAnsi(openFileDialog1->FileName);
 			Trb2::trb2 trb = Trb2::trb2::trb2(filename,1);
 			trb.readHeader();
