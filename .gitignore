@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Bl2ModelConverter/test.fbx

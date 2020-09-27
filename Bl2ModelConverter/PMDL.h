@@ -1,6 +1,8 @@
 #pragma once
 #include "Symbol.h"
 /// Prime Model
+///
+/// Contains Model data + Skeleton
 class PMDL : public Symbol
 {
 public:
@@ -11,7 +13,7 @@ public:
 		uint32_t coordsOffset; //2 XYZ float values
 		uint32_t zero1;
 		uint32_t zero2;
-		uint32_t unknown2;
+		uint32_t boneTableOffset;
 		uint32_t sumVertCount; // I don't think that's correct
 		uint32_t faceStartOffsetRelative;
 		uint32_t vertexStartOffset;
@@ -22,6 +24,14 @@ public:
 		uint32_t unknownCount;
 		uint32_t unknownOffset; //Unknown
 		uint32_t zero5;
+	};
+
+	struct BoneTable
+	{
+		uint32_t boneCount;
+		uint32_t bonesOffset;
+		uint32_t boneNamesOffset;
+		uint32_t boneParentsOffset;
 	};
 
 	struct Coords
@@ -98,6 +108,7 @@ public:
 	std::vector<uint32_t> meshInfoOffsets;
 	MeshInfoTable meshInfoTable;
 	std::vector<MeshInfo> meshInfos;
+	BoneTable boneTable;
 
 };
 

@@ -42,6 +42,15 @@
     <ClCompile Include="PTEX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LocaleStringsForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringOffset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bl2ModelConverter.h">
@@ -75,6 +84,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PTEX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LocaleStringsForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataOffset.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringOffset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Endian.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

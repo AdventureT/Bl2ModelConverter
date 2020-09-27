@@ -1,7 +1,7 @@
 #include "TrbHeader.h"
 
-TrbHeader::TrbHeader(string signature, uint32_t magic, uint16_t flag1, uint16_t flag2, uint32_t dataInfoCount, uint32_t dataInfoSize, uint32_t tagCount, uint32_t tagSize,
-	uint32_t relocationDataOffset, uint32_t relocationDataSize)
+TrbHeader::TrbHeader(std::string signature, uint32_t magic, uint16_t flag1, uint16_t flag2, uint32_t dataInfoCount, uint32_t dataInfoSize, uint32_t tagCount, uint32_t tagSize,
+					 uint32_t relocationDataOffset, uint32_t relocationDataSize)
 {
 	setSignature(signature);
 	setMagic(magic);
@@ -15,7 +15,7 @@ TrbHeader::TrbHeader(string signature, uint32_t magic, uint16_t flag1, uint16_t 
 	this->relocationDataSize = relocationDataSize;
 }
 
-void TrbHeader::setSignature(string signature)
+void TrbHeader::setSignature(std::string signature)
 {
 	if (strcmp(signature.c_str(),"TRB") == 0)
 	{

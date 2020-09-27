@@ -187,7 +187,7 @@ std::vector<FbxNode*> FbxHelper::CreateSkeleton(std::vector<std::string> boneNam
 {
 	FbxNode* lRootNode = lScene->GetRootNode();
 	FbxNode* lSkeletonRoot = FbxNode::Create(lScene, "Root");
-	FbxSkeleton* skel = FbxSkeleton::Create(lScene, "test");
+	//FbxSkeleton* skel = FbxSkeleton::Create(lScene, "test");
 	std::vector<FbxNode*> fbxNodes;
 	for (size_t i = 0; i < boneNames.size(); i++)
 	{
@@ -243,6 +243,7 @@ std::vector<FbxNode*> FbxHelper::CreateSkeleton(std::vector<std::string> boneNam
 		//node->LclScaling.Set(nodeTM.GetS());
 		fbxNodes.push_back(node);
 	}
+
 	lRootNode->AddChild(fbxNodes[0]);
 	FbxExporter* lExporter = FbxExporter::Create(lSdkManager, "");
 	lSdkManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
@@ -251,7 +252,13 @@ std::vector<FbxNode*> FbxHelper::CreateSkeleton(std::vector<std::string> boneNam
 	if (!lExportStatus) {
 		throw gcnew System::Exception(gcnew System::String("Call to FbxExporter::Initialize() failed."));
 	}
+	lSkeletonRoot->Destroy();
 	lExporter->Export(lScene);
 	lExporter->Destroy();
 	return fbxNodes;
+}
+
+FbxHelper::~FbxHelper()
+{
+	lSdkManager->Destroy();
 }

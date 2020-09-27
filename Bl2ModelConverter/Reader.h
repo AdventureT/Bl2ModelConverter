@@ -1,38 +1,43 @@
 #pragma once
 #include <stdio.h>
 #include "umHalf.h"
+#include "Endian.h"
 #include <string>
 #include <vector>
-using namespace std;
-	class Reader
-	{
-	public:
-		uint8_t ReadByte(FILE* f);
+static enum Endian e;
 
-		vector<uint8_t> Reader::ReadBytes(FILE* f, int amount);
+//template <class T>
+//T read(FILE* f);
 
-		short ReadShort(FILE* f);
+char ReadByte(FILE* f);
 
-		unsigned short ReadUShort(FILE* f);
+unsigned char ReadUByte(FILE* f);
 
-		uint32_t ReadUInt(FILE* f);
+std::vector<uint8_t> ReadBytes(FILE* f, int amount);
 
-		int32_t ReadInt(FILE* f);
+short ReadShort(FILE* f);
 
-		half ReadHalfFloat(FILE* f);
+uint16_t ReadUShort(FILE* f);
 
-		float ReadFloat(FILE* f);
+half ReadHalfFloat(FILE* f);
 
-		long ReadLong(FILE* f);
+float ReadFloat(FILE* f);
 
-		unsigned long ReadULong(FILE* f);
+long ReadLong(FILE* f);
 
-		long long ReadLongLong(FILE* f);
+unsigned long ReadULong(FILE* f);
 
-		unsigned long long ReadULongLong(FILE* f);
+uint32_t ReadUInt(FILE* f);
 
-		std::string ReadString(FILE* f);
-		std::string ReadString(FILE* f, int chars);
-	};
+int32_t ReadInt(FILE* f);
+
+long long ReadLongLong(FILE* f);
+
+unsigned long long ReadULongLong(FILE* f);
+
+std::string ReadString(FILE* f);
+std::string ReadString(FILE* f, int chars);
+std::wstring ReadUnicodeString(FILE* f);
+std::wstring ReadUnicodeString(FILE* f, int chars);
 
 

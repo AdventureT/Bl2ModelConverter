@@ -1,0 +1,2 @@
+#include "LocaleStringsForm.h"
+

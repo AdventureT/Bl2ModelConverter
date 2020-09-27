@@ -32,7 +32,6 @@ public:
 		///Just a Guess
 		uint32_t unknown3;
 		uint32_t zeros[13];
-	};
-	TextureInfo texInfo;
+	} texInfo;
 };
 

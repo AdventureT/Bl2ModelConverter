@@ -1,10 +1,7 @@
 #pragma once
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
 #include <vector>
 
-using namespace std;
 /// Trb consists of Symbols
 ///
 /// Each Symbol has this Header
@@ -14,7 +11,7 @@ public:
 	struct SymbolHeader
 	{
 		///Symbol Label
-		string label;
+		std::string label;
 		///Padding
 		uint32_t zero;
 		///Just a guess

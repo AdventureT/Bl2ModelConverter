@@ -1,40 +1,42 @@
 #pragma once
-#include "Reader.h"
 #include "umHalf.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include <vector>
-#include <tchar.h>
 #include "FbxHelper.h"
-#include "TrbHeader.h"
-#include "PTEX.h"
-#include "PMDL.h"
+#include "StringOffset.h"
 
 using namespace System::Runtime::InteropServices;
-using namespace std;
 
-class trb2 : Reader
+class trb2
 {
 public:
-	trb2(char* fileName, uint32_t type); //Constructor
+	struct Props
+	{
+		std::vector<std::string> entityNames;
+		std::vector<std::vector<std::string>> propNames;
+		std::vector<std::string> values;
+	};
+	trb2(std::string fileName, uint32_t type); //Constructor
 	void readHeader();
-	vector<string> readListBoxInfos();
-	string readData(vector<int> indices, vector<string> fns);
+	std::vector<std::string> readListBoxInfos();
+	std::string readData(std::vector<int> indices, std::vector<std::string> fns);
 	void writeScoringData(float scoringValue, int index);
+	std::vector<std::wstring> ReadLocaleStrings();
+	struct Props ReadProperties();
+	~trb2();
 protected:
-
 	struct TagInfo
 	{
-		string tag;
+		std::string tag;
 		uint32_t dataOffset;
 		uint32_t flag; //?
 		uint32_t textOffset;
+		std::string filename;
 	};
 
 	struct DataInfo
 	{
 		uint32_t unknown1;
-		uint32_t unknown2;
+		StringOffset textOffset;
 		uint32_t unknown3;
 		uint32_t unknown4;
 		uint32_t dataSize;
@@ -95,22 +97,52 @@ protected:
 
 	struct ScoringInfo
 	{
-		string scoringName;
+		std::string scoringName;
 		uint32_t scoringNameOffset;
 		uint32_t unknown;
 		float value;
 	};
 
-	vector<TagInfo> tagInfos;
-	vector<DataInfo> dataInfos;
-	vector<SYMBInfo> symbInfos;
-	vector<SubInfoData> subInfoDatas;
-	vector<string> text;
-	vector<uint32_t> subInfoStarts;
-public: 
-	vector<ScoringInfo> si;
+	struct EntitiesInfo
+	{
+		uint32_t entityNameOffset;
+		uint32_t propertiesCount;
+		uint32_t propertiesOffset; // Each Prop is 12 bytes
+		uint32_t matrixOffset; //4x4 matrix
+		uint32_t floatVectorOffset; // 4 float vector
+		uint32_t unknown;
+		uint32_t flag;
+		uint32_t valuesOffset; // 2 ints unknown purpose
+	};
+
+	enum PrimitiveType
+	{
+		ENUM, //OrientationType, VehicleType maybe enums? OnPointTrigger has FF FF FF FF??
+		Unknown,
+		FLOAT,
+		BOOL,
+		INT
+	};
+
+	struct Property
+	{
+		uint32_t propertyNameOffset;
+		PrimitiveType type;
+		uint32_t value;
+	};
+
+	
+
+	std::vector<TagInfo> tagInfos;
+	std::vector<SYMBInfo> symbInfos;
+	std::vector<SubInfoData> subInfoDatas;
+	std::vector<std::string> text;
+	std::vector<uint32_t> subInfoStarts;
+public:
+	std::vector<ScoringInfo> si;
 	  uint32_t scoringInfoOffset;
+	  std::vector<DataInfo> dataInfos;
 	  FILE* f;
 	  uint32_t Type;
-	  char* filename = new char[256];
+	  std::string filename;
 };

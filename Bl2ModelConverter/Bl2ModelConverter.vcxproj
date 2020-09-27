@@ -97,7 +97,7 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
-      <AdditionalLibraryDirectories>./lib/vs2017/86bit/dbg</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./lib/vs2017/86bit/dbg;./lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,11 +139,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bl2ModelConverter.cpp" />
+    <ClCompile Include="Entities.cpp" />
     <ClCompile Include="FbxHelper.cpp" />
+    <ClCompile Include="LocaleStringsForm.cpp" />
     <ClCompile Include="PTEX.cpp" />
     <ClCompile Include="PMDL.cpp" />
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="RelocationData.cpp" />
+    <ClCompile Include="StringOffset.cpp" />
     <ClCompile Include="trb2.cpp" />
     <ClCompile Include="TrbHeader.cpp" />
   </ItemGroup>
@@ -152,8 +155,17 @@
     <ClInclude Include="Bl2ModelConverter.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="DataOffset.hpp" />
+    <ClInclude Include="Endian.h" />
+    <ClInclude Include="Entities.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="FbxHelper.h" />
+    <ClInclude Include="LocaleStringsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="PTEX.h" />
+    <ClInclude Include="StringOffset.h" />
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="PMDL.h" />
     <ClInclude Include="Reader.h" />
@@ -165,6 +177,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Bl2ModelConverter.resx">
       <DependentUpon>Bl2ModelConverter.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Entities.resx">
+      <DependentUpon>Entities.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocaleStringsForm.resx">
+      <DependentUpon>LocaleStringsForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
