@@ -554,7 +554,7 @@ std::vector<std::wstring> trb2::ReadLocaleStrings()
 	return localeStrings;
 }
 
-struct trb2::Props trb2::ReadProperties()
+struct trb2::Props trb2:: ReadProperties()
 {
 	fseek(f, tagInfos[0].dataOffset + dataInfos[1].dataOffset, SEEK_SET);
 	uint32_t entitiesInfoOffset = ReadUInt(f);
@@ -564,7 +564,7 @@ struct trb2::Props trb2::ReadProperties()
 	struct Props prop;
 	for (size_t i = 0; i < entitiesInfoCount; i++)
 	{
-		entitiesInfos.push_back({ ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f) });
+		entitiesInfos.push_back({ ReadUInt(f), ReadUShort(f), ReadUShort(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f), ReadUInt(f) });
 	}
 	for (size_t i = 0; i < entitiesInfoCount; i++)
 	{
@@ -572,20 +572,63 @@ struct trb2::Props trb2::ReadProperties()
 		prop.entityNames.push_back(ReadString(f));
 	}
 	//Read Properties
-	for (size_t i = 0; i < entitiesInfos[i].propertiesCount; i++)
+	for (size_t i = 0; i < entitiesInfoCount; i++)
 	{
 		fseek(f, entitiesInfos[i].propertiesOffset + dataInfos[1].dataOffset, SEEK_SET);
 		std::vector<std::string> propNamess;
+		std::vector<std::string> propTypes;
+		std::vector<std::string> propValues;
 		for (size_t j = 0; j < entitiesInfos[i].propertiesCount; j++)
 		{	
-			Property p = {ReadUInt(f), static_cast<PrimitiveType>(ReadUInt(f)), ReadUInt(f)};
+			Property p = { ReadUInt(f), static_cast<PrimitiveType>(ReadUInt(f)) };
 			long returnH = ftell(f);
 			fseek(f, p.propertyNameOffset + dataInfos[0].dataOffset, SEEK_SET);
 			propNamess.push_back(ReadString(f));
 			fseek(f, returnH, SEEK_SET);
+			std::string str;
+			switch (p.type)
+			{
+			case ENUM:
+				propTypes.push_back("ENUM");
+				propValues.push_back(std::to_string(ReadInt(f)));
+				break;
+			case INT:
+				propTypes.push_back("INT");
+				propValues.push_back(std::to_string(ReadInt(f)));
+				break;
+			case VECTOR4:
+				propTypes.push_back("VECTOR4");
+				fseek(f, ReadUInt(f) + dataInfos[1].dataOffset, SEEK_SET);
+				propValues.push_back("<" + std::to_string(ReadFloat(f)) + " " + std::to_string(ReadFloat(f)) + " " + std::to_string(ReadFloat(f)) + " " + std::to_string(ReadFloat(f)) + " >");
+				fseek(f, returnH + 4, SEEK_SET);
+				break;
+			case TEXTOFFSET:
+				propTypes.push_back("TEXTOFFSET");
+				fseek(f, ReadUInt(f) + dataInfos[0].dataOffset, SEEK_SET);
+				str = ReadString(f);
+				propValues.push_back(str == ".text" ? "" : str);
+				fseek(f, returnH + 4, SEEK_SET);
+				break;
+			case BOOL:
+				propTypes.push_back("BOOL");
+				propValues.push_back(ReadUInt(f) == 1 ? "true" : "false");
+				break;
+			case FLOAT:
+				propTypes.push_back("FLOAT");
+				propValues.push_back(std::to_string(ReadFloat(f)));
+				break;
+			default:
+				fseek(f, 4, SEEK_CUR);
+				propTypes.push_back("UNKNOWN");
+				propValues.push_back("-");
+				break;
+			}
+			
+			
 		}
+		prop.types.push_back(propTypes);
+		prop.values.push_back(propValues);
 		prop.propNames.push_back(propNamess);
-		//TODO
 	}
 	return prop;
 }

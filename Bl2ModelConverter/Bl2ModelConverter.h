@@ -69,6 +69,9 @@ namespace Bl2ModelConverter {
 	private: System::Windows::Forms::ColumnHeader^ dataSections;
 	private: System::Windows::Forms::ColumnHeader^ offset;
 	private: System::Windows::Forms::ColumnHeader^ size;
+	private: System::Windows::Forms::MenuStrip^ menuStrip1;
+	private: System::Windows::Forms::ToolStripMenuItem^ fileToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ loadTrbToolStripMenuItem;
 	private: System::Windows::Forms::TextBox^ textBox1;
 
 
@@ -96,8 +99,12 @@ namespace Bl2ModelConverter {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->listView2 = (gcnew System::Windows::Forms::ListView());
 			this->dataSections = (gcnew System::Windows::Forms::ColumnHeader());
-			this->size = (gcnew System::Windows::Forms::ColumnHeader());
 			this->offset = (gcnew System::Windows::Forms::ColumnHeader());
+			this->size = (gcnew System::Windows::Forms::ColumnHeader());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadTrbToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// button1
@@ -218,15 +225,38 @@ namespace Bl2ModelConverter {
 			this->dataSections->Text = L"DataSections";
 			this->dataSections->Width = 80;
 			// 
+			// offset
+			// 
+			this->offset->Text = L"Offset";
+			this->offset->Width = 80;
+			// 
 			// size
 			// 
 			this->size->Text = L"Size";
 			this->size->Width = 100;
 			// 
-			// offset
+			// menuStrip1
 			// 
-			this->offset->Text = L"Offset";
-			this->offset->Width = 80;
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->fileToolStripMenuItem });
+			this->menuStrip1->Location = System::Drawing::Point(0, 0);
+			this->menuStrip1->Name = L"menuStrip1";
+			this->menuStrip1->Size = System::Drawing::Size(1147, 24);
+			this->menuStrip1->TabIndex = 11;
+			this->menuStrip1->Text = L"menuStrip1";
+			// 
+			// fileToolStripMenuItem
+			// 
+			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->loadTrbToolStripMenuItem });
+			this->fileToolStripMenuItem->Name = L"fileToolStripMenuItem";
+			this->fileToolStripMenuItem->Size = System::Drawing::Size(37, 20);
+			this->fileToolStripMenuItem->Text = L"File";
+			// 
+			// loadTrbToolStripMenuItem
+			// 
+			this->loadTrbToolStripMenuItem->Name = L"loadTrbToolStripMenuItem";
+			this->loadTrbToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->loadTrbToolStripMenuItem->Text = L"Load Trb";
+			this->loadTrbToolStripMenuItem->Click += gcnew System::EventHandler(this, &Bl2ModelConverter::loadTrbToolStripMenuItem_Click);
 			// 
 			// Bl2ModelConverter
 			// 
@@ -242,9 +272,12 @@ namespace Bl2ModelConverter {
 			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
+			this->Controls->Add(this->menuStrip1);
 			this->Name = L"Bl2ModelConverter";
 			this->Text = L" ";
 			this->Load += gcnew System::EventHandler(this, &Bl2ModelConverter::Bl2ModelConverter_Load);
+			this->menuStrip1->ResumeLayout(false);
+			this->menuStrip1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -253,39 +286,7 @@ namespace Bl2ModelConverter {
 	private: System::Void Bl2ModelConverter_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		listView1->Items->Clear();
-		listView2->Items->Clear();
-		textBox1->Clear();
-		comboBox2->Text = "";
-		comboBox2->Items->Clear();
-		richTextBox1->Clear();
-		if (trb != nullptr && trb->f != nullptr) fclose(trb->f);
-		openFileDialog1->FileName = "Select a Trb Model file";
-		openFileDialog1->Filter = "Trb Model file (*.trb)|*.trb";
-		openFileDialog1->Title = "Open Trb Model File";
-		openFileDialog1->Multiselect = false;
-		if (openFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK)
-		{
-			fileNameWithPath = openFileDialog1->FileName;
-			trb = new trb2((char*)(void*)Marshal::StringToHGlobalAnsi(fileNameWithPath), 1);
-			trb->readHeader();
-			std::vector<std::string> dataInfo = trb->readListBoxInfos();
-			for (size_t i = 0; i < dataInfo.size(); i+=3)
-			{
-				ListViewItem^ lvi = gcnew ListViewItem(gcnew System::String(dataInfo[i].c_str()));
-				lvi->SubItems->Add(gcnew System::String(dataInfo[i+1].c_str()));
-				lvi->SubItems->Add(gcnew System::String(dataInfo[i + 2].c_str()));
-				listView1->Items->Add(lvi);
-			}
-			for (int i = 0; i < trb->dataInfos.size(); i++)
-			{
-				ListViewItem^ lvi = gcnew ListViewItem(gcnew System::String(trb->dataInfos[i].textOffset.value.c_str()));
-				lvi->SubItems->Add(gcnew System::String(std::to_string(trb->dataInfos[i].dataOffset).c_str()));
-				lvi->SubItems->Add(gcnew System::String(std::to_string(trb->dataInfos[i].dataSize).c_str()));
-				listView2->Items->Add(lvi);
-			}
-			listView1->Sorting = SortOrder::Ascending;
-		}
+		
 	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 		auto selected = listView1->SelectedItems;
@@ -397,6 +398,41 @@ private: System::Void listViewItem_MouseDoubleClick(System::Object^ sender, Syst
 			entitiesForm->listView1->Items->Add(gcnew System::String(prop.entityNames[i].c_str()) + "\n");
 		}
 		entitiesForm->ShowDialog();
+	}
+}
+private: System::Void loadTrbToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+	listView1->Items->Clear();
+	listView2->Items->Clear();
+	textBox1->Clear();
+	comboBox2->Text = "";
+	comboBox2->Items->Clear();
+	richTextBox1->Clear();
+	if (trb != nullptr && trb->f != nullptr) fclose(trb->f);
+	openFileDialog1->FileName = "Select a Trb Model file";
+	openFileDialog1->Filter = "Trb Model file (*.trb)|*.trb";
+	openFileDialog1->Title = "Open Trb Model File";
+	openFileDialog1->Multiselect = false;
+	if (openFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK)
+	{
+		fileNameWithPath = openFileDialog1->FileName;
+		trb = new trb2((char*)(void*)Marshal::StringToHGlobalAnsi(fileNameWithPath), 1);
+		trb->readHeader();
+		std::vector<std::string> dataInfo = trb->readListBoxInfos();
+		for (size_t i = 0; i < dataInfo.size(); i += 3)
+		{
+			ListViewItem^ lvi = gcnew ListViewItem(gcnew System::String(dataInfo[i].c_str()));
+			lvi->SubItems->Add(gcnew System::String(dataInfo[i + 1].c_str()));
+			lvi->SubItems->Add(gcnew System::String(dataInfo[i + 2].c_str()));
+			listView1->Items->Add(lvi);
+		}
+		for (int i = 0; i < trb->dataInfos.size(); i++)
+		{
+			ListViewItem^ lvi = gcnew ListViewItem(gcnew System::String(trb->dataInfos[i].textOffset.value.c_str()));
+			lvi->SubItems->Add(gcnew System::String(std::to_string(trb->dataInfos[i].dataOffset).c_str()));
+			lvi->SubItems->Add(gcnew System::String(std::to_string(trb->dataInfos[i].dataSize).c_str()));
+			listView2->Items->Add(lvi);
+		}
+		listView1->Sorting = SortOrder::Ascending;
 	}
 }
 };

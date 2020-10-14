@@ -13,7 +13,8 @@ public:
 	{
 		std::vector<std::string> entityNames;
 		std::vector<std::vector<std::string>> propNames;
-		std::vector<std::string> values;
+		std::vector<std::vector<std::string>> types;
+		std::vector<std::vector<std::string>> values;
 	};
 	trb2(std::string fileName, uint32_t type); //Constructor
 	void readHeader();
@@ -106,10 +107,11 @@ protected:
 	struct EntitiesInfo
 	{
 		uint32_t entityNameOffset;
-		uint32_t propertiesCount;
+		uint16_t propertiesCount;
+		uint16_t propertiesCount2; // IDK what that is
 		uint32_t propertiesOffset; // Each Prop is 12 bytes
 		uint32_t matrixOffset; //4x4 matrix
-		uint32_t floatVectorOffset; // 4 float vector
+		uint32_t positionOffset; // 4 float vector (compare with Nicktoons Unite Entities .INI or .TRB) 
 		uint32_t unknown;
 		uint32_t flag;
 		uint32_t valuesOffset; // 2 ints unknown purpose
@@ -117,18 +119,22 @@ protected:
 
 	enum PrimitiveType
 	{
-		ENUM, //OrientationType, VehicleType maybe enums? OnPointTrigger has FF FF FF FF??
-		Unknown,
+		ENUM, //OrientationType, VehicleType maybe enums? OnPointTrigger has FF FF FF FF?? INT
+		INT,
 		FLOAT,
 		BOOL,
-		INT
+		TEXTOFFSET,
+		VECTOR4,
+		Unknown2,
+		Unknown3,
+		Unknown4,
+		OFFSET
 	};
 
 	struct Property
 	{
 		uint32_t propertyNameOffset;
 		PrimitiveType type;
-		uint32_t value;
 	};
 
 	

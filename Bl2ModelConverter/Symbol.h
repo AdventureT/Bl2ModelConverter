@@ -28,9 +28,7 @@ public:
 		uint32_t zero3;
 		///Padding
 		uint32_t zero4;
-	};
-
-	SymbolHeader symbolHeader;
+	} symbolHeader;
 	
 };
 
